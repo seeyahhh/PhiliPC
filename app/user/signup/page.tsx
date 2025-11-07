@@ -17,7 +17,10 @@ const SignupPage = () => {
 
 	return (
 		<div className="flex flex-col m-auto bottom-10 w-full max-w-md rounded-lg bg-white p-8 shadow-md relative z-10">
-			<h2 className="mb-6 text-center text-xl md:text-2xl lg:text-3xl font-bold text-gray-900"> Create Account!</h2>
+			<h2 className="mb-6 text-center text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
+				{" "}
+				Create Account!
+			</h2>
 			<form onSubmit={handleSubmit} className="space-y-6">
 				{/* Full Name Input */}
 				<div className="relative z-0">
@@ -79,22 +82,6 @@ const SignupPage = () => {
 					</label>
 				</div>
 
-				{/* Remember me Checkbox */}
-				<div className="flex gap-3">
-					<input
-						type="checkbox"
-						name="remember"
-						id="remember"
-						checked={isRemembered}
-						onChange={() => setIsRemembered(!isRemembered)}
-						className="w-4 peer"
-					/>
-					<label
-						htmlFor="remember"
-						className={`lg:text-sm ${isRemembered ? "text-primary" : "text-neutral"}`}>
-						Remember Me
-					</label>
-				</div>
 				{/* Submit Button */}
 				<div>
 					<button
@@ -104,9 +91,11 @@ const SignupPage = () => {
 					</button>
 				</div>
 				<p className="text-neutral text-xs text-center">
-					Don&apos;t have an account yet?{" "}
-					<Link href="/signup" className="text-primary font-semibold">
-						Sign up
+					Already have an account?
+					<Link
+						href="/user/login"
+						className="text-primary font-semibold ml-1 p-2 shadow-md border border-gray-300 rounded-xl">
+						Log in
 					</Link>
 				</p>
 			</form>

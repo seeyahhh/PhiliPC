@@ -83,8 +83,10 @@ const LoginPage = () => {
 					</button>
 				</div>
 				<p className="text-neutral text-xs text-center">
-					Don&apos;t have an account yet?{" "}
-					<Link href="/signup" className="text-primary font-semibold">
+					Don&apos;t have an account yet?
+					<Link
+						href="/user/signup"
+						className="text-primary font-semibold ml-1 p-2 shadow-md border border-gray-300 rounded-xl">
 						Sign up
 					</Link>
 				</p>
