@@ -38,7 +38,7 @@ export default function LoginPage() {
 					</h2>
 					<form onSubmit={handleSubmit} className="space-y-6">
 						{/* Email Input */}
-						<div className="relative">
+						<div className="relative z-0">
 							<input
 								id="email"
 								name="email"
@@ -48,17 +48,17 @@ export default function LoginPage() {
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
 								placeholder=" "
-								className="peer block w-full rounded-md border text-black border-gray-300 px-3 pt-5 pb-2 shadow-sm placeholder-transparent focus:border-primary focus:outline-none focus:ring-0 sm:text-sm"
+								className="block py-2.5 pt-5 px-2 w-full text-sm text-gray-900 bg-transparent border rounded-md z-5 hover:cursor-text border-gray-300 shadow-sm focus:outline-primary focus:ring-0 focus:border-primary peer"
 							/>
 							<label
 								htmlFor="email"
-								className="absolute hover:cursor-text left-3 top-2 text-gray-500 text-sm transition-all duration-150 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary">
+								className="absolute text-sm px-3 text-gray-500 duration-300 transform -translate-y-2 scale-75 top-3 z-10 hover:cursor-text origin-left peer-focus:start-0 peer-focus:text-primary peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1 peer-focus:scale-75 peer-focus:-translate-y-2 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
 								Email address
 							</label>
 						</div>
 
 						{/* Password Input */}
-						<div className="relative">
+						<div className="relative z-0">
 							<input
 								id="password"
 								name="password"
@@ -68,11 +68,11 @@ export default function LoginPage() {
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								placeholder=" "
-								className="peer block w-full rounded-md border text-black border-gray-300 px-3 pt-5 pb-2 shadow-sm placeholder-transparent focus:border-primary focus:outline-none focus:ring-0 sm:text-sm"
+								className="block py-2.5 pt-5 px-2 w-full text-sm text-gray-900 bg-transparent border rounded-md border-gray-300 shadow-sm focus:outline-primary focus:ring-0 focus:border-primary peer"
 							/>
 							<label
 								htmlFor="password"
-								className="absolute hover:cursor-text left-3 top-2 text-gray-500 text-sm transition-all duration-150 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-xs peer-focus:text-primary">
+								className="absolute text-sm px-3 text-gray-500 duration-300 transform -translate-y-2 scale-75 top-3 -z-10 origin-left peer-focus:start-0 peer-focus:text-primary peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1 peer-focus:scale-75 peer-focus:-translate-y-2 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">
 								Password
 							</label>
 						</div>
