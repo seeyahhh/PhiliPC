@@ -1,17 +1,34 @@
-import React from 'react'
-
+import { MoveRight, ShieldCheck } from "lucide-react";
+import React from "react";
 const Banner = () => {
-  return (
-    <div className='flex w-full justify-center h-100 p-10 grid-rows-1 grid-cols-2'>
-        <div className="bg-blue-100 w-md rounded-l-3xl">
-            <div className="flex flex-col gap-4 text-black p-7">
-                <h1 className='font-extrabold text-4xl'>Tech Enthusiasts, Welcome Home</h1>
-                <span className='text-neutral'>Performance-grade GPUs, high refresh monitors, and custom-key peripherals: the hardware to perfect your setup</span>
-            </div>
-        </div>
-        <div className="bg-light-primary w-4xl rounded-r-3xl">asf</div>
-    </div>
-  )
-}
+	return (
+		<div className="flex w-full justify-center p-10 grid-rows-1 grid-cols-2 h-fit">
+			{/* Left */}
+			<div className="flex flex-col justify-between min-h-80 gap-5 bg-blue-100 w-md rounded-3xl md:rounded-r-none p-7">
+				<div className="text-black">
+					<h1 className="font-extrabold text-2xl lg:text-4xl mb-4">Tech Enthusiasts, Welcome Home</h1>
+					<span className="text-neutral text-sm md:text-md ">
+						Performance-grade GPUs, high refresh monitors, and custom-key peripherals: the hardware to
+						perfect your setup
+					</span>
+				</div>
+				<div className="">
+					<button className="flex bg-light-primary hover:bg-gray-300 text-dark-primary hover:text-cyan-700 hover:border-cyan-700 lg:w-50 py-2 px-5 rounded-4xl border-4 border-dark-primary  hover:cursor-pointer">
+						<span className="m-auto font-extrabold text-xl">Buy now</span>
+						<MoveRight className="inline w-10 h-10 m-auto " />
+					</button>
+				</div>
+			</div>
 
-export default Banner
+			{/* Right */}
+			<div className="hidden md:inline relative z-0 bg-[#7AA2B8] w-4xl rounded-r-3xl ">
+				<div className="absolute bg-[#A3D4D3] w-fit h-30 -inset-x-2 inset-y-15 flex p-3 border-b-4 border-gray-500">
+					<ShieldCheck className="w-15 h-15 lg:w-17 lg:h-17 m-auto text-gray-600"/>
+					<span className="m-auto mask-linear-from-neutral-800 font-extrabold text-3xl lg:text-4xl text-gray-600">Shop with Confidence</span>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default Banner;
