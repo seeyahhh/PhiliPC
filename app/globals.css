@@ -2,14 +2,15 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-	--background: #ffffff;
+	--background: oklch(96.7% 0.003 264.542)
 	--foreground: #171717;
 }
 
 @theme {
 	--color-primary: oklch(0.6 0.22 257.21);
 	--color-neutral: oklch(55.1% 0.027 264.364);
-	--color-dark-primary: oklch(33.377% 0.06173 222.11)
+	--color-dark-primary: oklch(33.377% 0.06173 222.11);
+	--color-light-primary: #8C9FAF;
 }
 
 @layer utilities {
@@ -41,7 +42,7 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--background: #0a0a0a;
+		--background: #36393e;
 		--foreground: #ededed;
 	}
 }

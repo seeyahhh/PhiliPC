@@ -13,7 +13,7 @@ const Navigation = () => {
 	const [userMenuOpen, setUserMenuOpen] = useState(false);
 
 	return (
-		<nav className="bg-gradient-blue border-gray-200 dark:bg-gray-900">
+		<nav className="bg-gradient-blue sticky top-0 right-0 left-0 border-gray-200 dark:bg-gray-900">
 			<div className={`flex items-center justify-between mx-auto py-4 px-5 md:px-10 lg:px-15`}>
 				{/* Logo */}
 				<Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
