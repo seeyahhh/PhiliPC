@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isRemembered, setIsRemembered] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         console.log('Logging in with:', { username, password });
 

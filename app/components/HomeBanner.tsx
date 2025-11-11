@@ -1,7 +1,7 @@
 import { MoveRight, ShieldCheck } from 'lucide-react';
 import React from 'react';
 
-const Banner = () => {
+const Banner: React.FC = () => {
     return (
         <div className="mx-auto flex h-fit w-full max-w-7xl grid-cols-2 grid-rows-1 justify-center py-10">
             {/* Left */}

@@ -9,7 +9,7 @@ import Button from '@/app/components/Button';
 import { Search, ChevronDown, CircleUser } from 'lucide-react';
 import ThemeToggle from '@/app/components/ThemeToggle';
 
-const Navigation = () => {
+const Navigation: React.FC = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import products from '@/app/data/productMock.json';
 import Products from '@/app/components/Products';
 
-export default function Home() {
+const Home: React.FC = () => {
     return (
         <div className="min-h-screen bg-gray-200 dark:bg-gray-800">
             <Navigation />
@@ -46,4 +46,6 @@ export default function Home() {
             </div>
         </div>
     );
-}
+};
+
+export default Home;

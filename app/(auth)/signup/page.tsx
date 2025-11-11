@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const SignupPage = () => {
+const SignupPage: React.FC = () => {
     const [fullName, setFullname] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         console.log('Logging in with:', { username, password });
         // connect to backend

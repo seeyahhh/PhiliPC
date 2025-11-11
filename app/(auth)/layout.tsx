@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-const User = ({ children }: { children: React.ReactNode }) => {
+const User: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
         <div className="grid min-h-screen grid-cols-1 bg-gray-100 lg:grid-cols-2">
             <div className="hidden items-center justify-center bg-[url('/images/form-bg.jpg')] bg-cover bg-center lg:flex">

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { User } from 'lucide-react';
 import Image from 'next/image';
 import Button from '@/app/components/Button';
