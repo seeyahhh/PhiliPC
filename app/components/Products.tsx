@@ -12,11 +12,11 @@ interface ProductProps {
 
 const Products: React.FC<ProductProps> = ({ product, onClick }) => {
     return (
-        <div className="flex flex-col min-h-50 bg-gray-50 dark:bg-gray-900 p-4 rounded-2xl">
+        <div className="flex min-h-50 flex-col rounded-2xl bg-gray-50 p-4 dark:bg-gray-900">
             {/* User */}
-            <div className="flex items-center gap-2 mb-3">
-                <div className="rounded-4xl p-2 bg-blue-50">
-                    <User className="text-black w-8 h-8" />
+            <div className="mb-3 flex items-center gap-2">
+                <div className="rounded-4xl bg-blue-50 p-2">
+                    <User className="h-8 w-8 text-black" />
                 </div>
                 <span className="text-black dark:text-white">
                     {product.fname} {product.lname}
@@ -24,7 +24,7 @@ const Products: React.FC<ProductProps> = ({ product, onClick }) => {
             </div>
 
             {/* Image */}
-            <div className="relative w-full h-50">
+            <div className="relative h-50 w-full">
                 <Image
                     src={
                         'https://down-ph.img.susercontent.com/file/ph-11134207-7r98v-lvk7ew0vuxfp28_tn.webp'
@@ -35,8 +35,8 @@ const Products: React.FC<ProductProps> = ({ product, onClick }) => {
             </div>
 
             {/* Product Details */}
-            <div className="grow flex flex-col gap-1 text-black dark:text-white my-3">
-                <span className="font-semibold text-lg">{product.item_name}</span>
+            <div className="my-3 flex grow flex-col gap-1 text-black dark:text-white">
+                <span className="text-lg font-semibold">{product.item_name}</span>
                 <span>${product.item_price}</span>
             </div>
 

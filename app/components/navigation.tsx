@@ -14,9 +14,9 @@ const Navigation = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
     return (
-        <nav className="bg-linear-to-r from-[#003d4d] to-[#0081b3] dark:from-gray-900 dark:to-gray-900 z-999 sticky top-0 right-0 left-0 border-gray-200">
+        <nav className="sticky top-0 right-0 left-0 z-999 border-gray-200 bg-linear-to-r from-[#003d4d] to-[#0081b3] dark:from-gray-900 dark:to-gray-900">
             <div
-                className={`flex items-center justify-between mx-auto py-4 px-5 md:px-10 lg:px-15`}
+                className={`mx-auto flex items-center justify-between px-5 py-4 md:px-10 lg:px-15`}
             >
                 {/* Logo */}
                 <Link
@@ -31,22 +31,19 @@ const Navigation = () => {
                     />
                 </Link>
                 {/* Right Side */}
-                <div className="md:order-2 flex">
+                <div className="flex md:order-2">
                     {/* SearchBar, SellButton, UserIcon */}
                     <div className="flex items-center space-x-3">
                         <ThemeToggle />
                         {/* Desktop Search Bar */}
-                        <div className="hidden md:block relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <div className="relative hidden md:block">
+                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <Search className="w-5 text-gray-400" />
                             </div>
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                className="block md:w-30 lg:w-40 xl:w-60 p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg 
-										bg-gray-50 focus:ring-blue-500 focus:border-blue-500 
-										dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
-										dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                className="block rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 md:w-30 lg:w-40 xl:w-60 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                             />
                         </div>
 
@@ -56,24 +53,24 @@ const Navigation = () => {
                         </div>
 
                         {/* Dekstop User Icon */}
-                        <div className="hidden md:inline relative">
+                        <div className="relative hidden md:inline">
                             <button
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                className="flex items-cente text-white hover:text-blue-400"
+                                className="items-cente flex text-white hover:text-blue-400"
                             >
                                 <CircleUser
-                                    className={`w-8 h-8 ms-1 transition-transform duration-200`}
+                                    className={`ms-1 h-8 w-8 transition-transform duration-200`}
                                 />
                             </button>
 
                             {/* Desktop User Menu */}
                             {userMenuOpen && (
-                                <ul className="absolute right-0 mt-2 w-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-md z-50">
+                                <ul className="absolute right-0 z-50 mt-2 w-50 rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
                                     {userSettings.map((userSettings) => (
                                         <li key={userSettings.id}>
                                             <Link
                                                 href="/user/profile"
-                                                className="block px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                                className="block px-4 py-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                                             >
                                                 <div className="font-semibold">
                                                     {userSettings.label}
@@ -87,42 +84,39 @@ const Navigation = () => {
                     </div>
 
                     {/* Mobile Search Icon */}
-                    <div className="md:hidden relative flex items-center">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <div className="relative flex items-center md:hidden">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                             <Search className="w-5 text-gray-400" />
                         </div>
                         <input
                             type="text"
                             placeholder="Search..."
-                            className=" w-40 p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg 
-										bg-gray-50 focus:ring-blue-500 focus:border-blue-500 
-										dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
-										dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="w-40 rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                         />
                     </div>
 
                     {/* Mobile User Icon */}
                     <button
                         onClick={() => setUserMenuOpen(!userMenuOpen)}
-                        className="md:hidden text-gray-500 dark:text-gray-400 p-2.5 me-1"
+                        className="me-1 p-2.5 text-gray-500 md:hidden dark:text-gray-400"
                     >
-                        <CircleUser className="text-white w-8 h-8" />
+                        <CircleUser className="h-8 w-8 text-white" />
                     </button>
                 </div>
 
                 {/* Dekstop Nav Items */}
                 <div
-                    className={`hidden md:flex items-center justify-between w-full md:w-auto md:order-1`}
+                    className={`hidden w-full items-center justify-between md:order-1 md:flex md:w-auto`}
                     id="navbar-search"
                 >
                     {/* Navigation Items */}
-                    <ul className="flex p-4 md:p-0 mt-4 font-medium rounded-lg md:space-x-1 lg:space-x-6  md:mt-0 md:border-0">
+                    <ul className="mt-4 flex rounded-lg p-4 font-medium md:mt-0 md:space-x-1 md:border-0 md:p-0 lg:space-x-6">
                         {navItems.map((item: NavItem) => {
                             return (
                                 <li key={item.id}>
                                     <Link
                                         href={item.href}
-                                        className="flex gap-3 py-2 px-3 text-white hover:text-blue-400 dark:hover:text-blue-500"
+                                        className="flex gap-3 px-3 py-2 text-white hover:text-blue-400 dark:hover:text-blue-500"
                                     >
                                         <div>
                                             <div className="font-medium">{item.label}</div>
@@ -136,11 +130,11 @@ const Navigation = () => {
                         <li className="relative">
                             <button
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                                className="flex items-center py-2 px-3 text-white hover:text-blue-400"
+                                className="flex items-center px-3 py-2 text-white hover:text-blue-400"
                             >
                                 More
                                 <ChevronDown
-                                    className={`w-4 h-4 ms-1 transition-transform duration-200 ${
+                                    className={`ms-1 h-4 w-4 transition-transform duration-200 ${
                                         dropdownOpen ? 'rotate-180' : ''
                                     }`}
                                 />
@@ -148,12 +142,12 @@ const Navigation = () => {
 
                             {/* Dropdown Menu */}
                             {dropdownOpen && (
-                                <ul className="absolute right-0 mt-2 w-50 divide-y divide-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-md z-50">
+                                <ul className="absolute right-0 z-50 mt-2 w-50 divide-y divide-gray-300 rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
                                     {moreItems.map((option) => (
                                         <li key={option.id}>
                                             <a
                                                 href="#"
-                                                className="block px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                                className="block px-4 py-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                                             >
                                                 <div className="font-medium">{option.label}</div>
                                             </a>
@@ -168,16 +162,15 @@ const Navigation = () => {
 
             {/* Mobile User Menu */}
             {userMenuOpen && (
-                <div className="lg:hidden border-t border-gray-200/50  backdrop-blur-lg">
-                    <div className="max-w-7xl mx-auto px-4 py-3 space-y-1">
+                <div className="border-t border-gray-200/50 backdrop-blur-lg lg:hidden">
+                    <div className="mx-auto max-w-7xl space-y-1 px-4 py-3">
                         {userSettings.map((item) => {
                             return (
                                 <Link
                                     key={item.id}
                                     href={item.href}
                                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 text-white hover:bg-dark-primary
-											`}
+                                    className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-white transition-all duration-200`}
                                 >
                                     {/* <Icon className="w-5 h-5" /> */}
                                     <div>

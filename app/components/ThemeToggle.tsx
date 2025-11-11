@@ -12,7 +12,7 @@ export default function ThemeToggle() {
     return (
         <button
             onClick={() => setDark(!dark)}
-            className="text-sm mx-auto p-2 dark:text-white"
+            className="mx-auto p-2 text-sm dark:text-white"
         >
             {dark ? <Sun /> : <Moon />}
         </button>

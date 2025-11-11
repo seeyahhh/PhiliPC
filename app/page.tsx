@@ -15,23 +15,23 @@ export default function Home() {
                 <Banner />
                 <section
                     id="recommendations"
-                    className="max-w-7xl mx-auto"
+                    className="mx-auto max-w-7xl"
                 >
-                    <div className="flex justify-between ">
+                    <div className="flex justify-between">
                         <div className="text-black dark:text-white">
-                            <span className="font-semibold text-lg">Recommended for you</span>
+                            <span className="text-lg font-semibold">Recommended for you</span>
                         </div>
                         <div className="">
                             <Link
                                 href={'#'}
-                                className="flex text-primary hover:text-blue-700 hover:underline"
+                                className="text-primary flex hover:text-blue-700 hover:underline"
                             >
                                 View All
-                                <ChevronRight className="w-6 h-6" />
+                                <ChevronRight className="h-6 w-6" />
                             </Link>
                         </div>
                     </div>
-                    <div className="grid md:grid-cols-2 gap-5 lg:grid-cols-3 grid-flow-row p-5">
+                    <div className="grid grid-flow-row gap-5 p-5 md:grid-cols-2 lg:grid-cols-3">
                         {products.map((product) => {
                             return (
                                 <Products
