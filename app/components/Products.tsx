@@ -11,7 +11,7 @@ interface ProductProps {
 
 const Products: React.FC<ProductProps> = ({ product, onClick }) => {
     return (
-        <div className="flex min-h-50 flex-col rounded-2xl bg-gray-50 p-4 dark:bg-gray-900">
+        <div className="flex min-h-50 flex-col rounded-2xl bg-gray-50 p-4 shadow-lg dark:bg-gray-900">
             {/* User */}
             <div className="mb-3 flex items-center gap-2">
                 <div className="rounded-4xl bg-blue-50 p-2">

@@ -30,7 +30,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({
     return (
         <html
             lang="en"
-            className={poppins.variable}
+            className={`${poppins.variable}`}
         >
             <body
                 className={`${geistSans.variable} ${geistMono.variable} ${poppins.className} antialiased`}

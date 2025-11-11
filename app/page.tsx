@@ -6,16 +6,20 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import products from '@/app/data/productMock.json';
 import Products from '@/app/components/Products';
+import CategoriesList from '@/app/components/CategoriesList';
+import Footer from '@/app/components/Footer';
 
 const Home: React.FC = () => {
     return (
         <div className="min-h-screen bg-gray-200 dark:bg-gray-800">
             <Navigation />
-            <div className="mx-10">
+            {/* Home Page */}
+            <div className="flex flex-col">
                 <Banner />
+                {/* Recommendations */}
                 <section
                     id="recommendations"
-                    className="mx-auto max-w-7xl"
+                    className="mx-auto my-4 max-w-7xl lg:w-7xl"
                 >
                     <div className="flex justify-between">
                         <div className="text-black dark:text-white">
@@ -31,7 +35,7 @@ const Home: React.FC = () => {
                             </Link>
                         </div>
                     </div>
-                    <div className="grid grid-flow-row gap-5 p-5 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="mb-4 grid grid-flow-row gap-5 p-5 md:grid-cols-2 lg:grid-cols-3">
                         {products.map((product) => {
                             return (
                                 <Products
@@ -43,7 +47,21 @@ const Home: React.FC = () => {
                         })}
                     </div>
                 </section>
+                <section
+                    id="categories"
+                    className="mx-auto my-4 max-w-7xl"
+                >
+                    <div className="flex justify-between">
+                        <div className="text-black dark:text-white">
+                            <span className="text-lg font-semibold">Explore Categories</span>
+                        </div>
+                    </div>
+                    <div className="">
+                        <CategoriesList />
+                    </div>
+                </section>
             </div>
+            <Footer />
         </div>
     );
 };

@@ -14,7 +14,7 @@ const Navigation: React.FC = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
     return (
-        <nav className="sticky top-0 right-0 left-0 z-999 border-gray-200 bg-linear-to-r from-[#003d4d] to-[#0081b3] dark:from-gray-900 dark:to-gray-900">
+        <nav className="sticky top-0 right-0 left-0 z-999 border-gray-200 bg-linear-to-r from-[#003d4d]/85 to-[#0081b3]/85 shadow-xl backdrop-blur-2xl dark:from-gray-900 dark:to-gray-900">
             <div
                 className={`mx-auto flex items-center justify-between px-5 py-4 md:px-10 lg:px-15`}
             >
