@@ -27,7 +27,7 @@ const Home: React.FC = () => {
                         </div>
                         <div className="">
                             <Link
-                                href={'#'}
+                                href={'/products'}
                                 className="text-primary flex hover:text-blue-700 hover:underline"
                             >
                                 View All
