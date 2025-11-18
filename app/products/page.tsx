@@ -218,7 +218,7 @@ const ProductsPage: React.FC = () => {
                                 setMaxPrice('');
                                 router.push('/products');
                             }}
-                            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                            className="bg-primary rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                         >
                             Clear all filters
                         </button>

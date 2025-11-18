@@ -3,6 +3,7 @@ import { User } from 'lucide-react';
 import Image from 'next/image';
 import Button from '@/app/components/Button';
 import { Product } from '@/app/data/types';
+import Link from 'next/link';
 
 interface ProductProps {
     product: Product;
@@ -44,7 +45,12 @@ const Products: React.FC<ProductProps> = ({ product, showUser = true }) => {
 
             {/* Button */}
             <div className="flex justify-center">
-                <Button label="View Product" />
+                <Link
+                    href={`/products/${product.listing_id}`}
+                    className="w-full"
+                >
+                    <Button label="View Product" />
+                </Link>
             </div>
         </div>
     );
