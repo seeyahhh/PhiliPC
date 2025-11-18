@@ -8,6 +8,7 @@
         "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
         "bio": "Passionate seller of vintage items",
         "location": "Quezon City",
+        "rating": 4.7,
         "listings": [
             {
                 "listing_id": 101,
@@ -56,6 +57,7 @@
         "avatar": "https://randomuser.me/api/portraits/men/35.jpg",
         "bio": "Collector and seller of electronics",
         "location": "Makati",
+        "rating": 3.2,
         "listings": [
             {
                 "listing_id": 103,
