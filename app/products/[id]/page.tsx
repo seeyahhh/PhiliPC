@@ -15,11 +15,9 @@ import {
     Star,
     MapPin,
     Shield,
-    Heart,
     Share2,
     ArrowLeft,
     Package,
-    Clock,
     User,
 } from 'lucide-react';
 
@@ -261,9 +259,6 @@ const ProductDetailPage: React.FC = () => {
                                 Contact Seller
                             </button>
                             <button className="rounded-lg border border-gray-300 p-3 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800">
-                                <Heart className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                            </button>
-                            <button className="rounded-lg border border-gray-300 p-3 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800">
                                 <Share2 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                             </button>
                         </div>
@@ -327,16 +322,12 @@ const ProductDetailPage: React.FC = () => {
                                 </div>
                                 <div className="mt-2 grid grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-400">
                                     <div className="flex items-center">
-                                        <Package className="mr-2 h-4 w-4" />{' '}
+                                        <Package className="mr-2 h-4 w-4" />
                                         {product.seller.total_sales} sales
                                     </div>
                                     <div className="flex items-center">
-                                        <MapPin className="mr-2 h-4 w-4" />{' '}
+                                        <MapPin className="mr-2 h-4 w-4" />
                                         {product.seller.location}
-                                    </div>
-                                    <div className="flex items-center">
-                                        <Clock className="mr-2 h-4 w-4" /> Member since{' '}
-                                        {product.seller.member_since || '2022'}
                                     </div>
                                 </div>
                                 <p className="mt-2 text-gray-700 dark:text-gray-300">
