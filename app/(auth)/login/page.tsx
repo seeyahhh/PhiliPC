@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import { useState } from "react";
 import Link from "next/link";
 
@@ -7,6 +8,17 @@ const LoginPage = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [isRemembered, setIsRemembered] = useState(false);
+=======
+import { useState, useActionState } from 'react';
+import Link from 'next/link'
+import { login } from "./actions";
+
+const LoginPage: React.FC = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [isRemembered, setIsRemembered] = useState(false);
+    const [state, action] = useActionState(login, undefined);
+>>>>>>> 100787c (feat(app): add fetching of all products and specific products from db)
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
