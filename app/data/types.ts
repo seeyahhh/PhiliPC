@@ -12,6 +12,7 @@ export type Product = {
     item_location: string;
     is_avail: boolean;
     full_name: string;
+    username: string;
     images?: string[];
 };
 
