@@ -1,7 +1,6 @@
 import { getProducts } from '@/app/lib/products';
 
-export async function GET() {
-    console.log('GET /api/items HIT');
+export async function GET(): Promise<Response> {
     const products = await getProducts();
     return Response.json(products);
 }
