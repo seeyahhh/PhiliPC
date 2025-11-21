@@ -37,40 +37,24 @@ export async function getUser(username: string): Promise<FullUser> {
     const [listings] = await db.query<Product[]>('SELECT * FROM products WHERE seller_id = ?', [user_id]);
 
     const [reviews] = await db.query<Review[]>(
-        `SELECT *
-                                    FROM reviews
-                                    WHERE transac_id IN 
-                                      (
-                                        SELECT transac_id 
-                                            FROM transactions t 
-                                            JOIN products p
-                                            ON t.listing_id = p.listing_id
-                                            WHERE t.listing_id IN 
-                                          (
-                                            SELECT listing_id
-                                                    FROM products 
-                                                    WHERE seller_id = ? AND is_avail = 0
-                                                )
-                                        );`,
+        `SELECT * 
+        FROM reviews r
+        JOIN transactions t
+        ON r.transac_id = t.transac_id
+        JOIN products p
+        ON t.listing_id = p.listing_id
+        WHERE p.seller_id = ? AND is_avail = 0;`,
         [user_id]
     );
 
     const [avg_rating] = await db.query<AvgRating[]>(
-        `SELECT AVG(review_rating) AS avg_rating
-                                    FROM reviews
-                                    WHERE transac_id IN 
-                                      (
-                                        SELECT transac_id 
-                                            FROM transactions t
-                                            JOIN products p
-                                            ON t.listing_id = p.listing_id
-                                            WHERE t.listing_id IN 
-                                          (
-                                            SELECT listing_id
-                                                    FROM products 
-                                                    WHERE seller_id = ? AND is_avail = 0
-                                                )
-                                        );`,
+        `SELECT AVG(review_rating) AS avg_rating 
+        FROM reviews r
+        JOIN transactions t
+        ON r.transac_id = t.transac_id
+        JOIN products p
+        ON t.listing_id = p.listing_id
+        WHERE p.seller_id = ? AND is_avail = 0;`,
         [user_id]
     );
 
