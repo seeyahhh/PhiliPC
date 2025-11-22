@@ -107,9 +107,11 @@ const Navigation: React.FC = () => {
                                 </Link>
                                 {/* isLoggedIn = false */}
                                 {/* isLoggedIn = true */}
-                                <button onClick={logout} className="hover:text-dark-primary text-xs text-nowrap text-white hover:cursor-pointer">
-                                    Log Out
-                                </button>
+                                <form action = {logout}>
+                                    <button className="hover:text-dark-primary text-xs text-nowrap text-white hover:cursor-pointer">
+                                        Log Out
+                                    </button>
+                                </form>
                                 {/* isLoggedIn = true */}
                             </div>
                             {/* Desktop User Menu */}
