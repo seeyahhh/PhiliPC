@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Navigation from '@/app/components/Navigation';
 import Footer from '@/app/components/Footer';
 import { ArrowLeft, Upload, Trash2 } from 'lucide-react';
@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { conditionOptions } from '@/app/data/searchFilters';
 import Dropdown from '@/app/components/Dropdown';
 import Image from 'next/image';
+import { useDropzone } from 'react-dropzone';
 
 const CreateListingPage: React.FC = () => {
     const router = useRouter();
@@ -23,16 +24,27 @@ const CreateListingPage: React.FC = () => {
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        if (!e.target.files) return;
+    const onDrop = useCallback(
+        (acceptedFiles: File[]) => {
+            if (images.length >= 5) return;
 
-        const files = Array.from(e.target.files);
+            const allowedFiles = acceptedFiles
+                .filter((file) => file.type.startsWith('image/'))
+                .slice(0, 5 - images.length);
 
-        setImages((prev) => [...prev, ...files]);
+            const urls = allowedFiles.map((file) => URL.createObjectURL(file));
 
-        const urls = files.map((file) => URL.createObjectURL(file));
-        setPreviewUrls((prev) => [...prev, ...urls]);
-    };
+            setImages((prev) => [...prev, ...allowedFiles]);
+            setPreviewUrls((prev) => [...prev, ...urls]);
+        },
+        [images]
+    );
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: { 'image/*': [] },
+        multiple: true,
+    });
 
     const removeImage = (index: number): void => {
         setImages((prev) => prev.filter((_, i) => i !== index));
@@ -92,7 +104,7 @@ const CreateListingPage: React.FC = () => {
 
             <div className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    {/* LEFT COLUMN  */}
+                    {/* LEFT COLUMN — IMAGES */}
                     <div className="flex h-full flex-col rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
                         <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
                             Upload Images
@@ -100,21 +112,23 @@ const CreateListingPage: React.FC = () => {
 
                         <div className="flex flex-1 flex-col">
                             {previewUrls.length === 0 && (
-                                <label className="flex flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+                                <div
+                                    {...getRootProps()}
+                                    className={`flex flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-400 p-6 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 ${
+                                        isDragActive ? 'bg-blue-50 dark:bg-blue-900' : ''
+                                    }`}
+                                >
+                                    <input {...getInputProps()} />
                                     <Upload className="mb-2 h-6 w-6" />
-                                    Click to upload images
-                                    <input
-                                        type="file"
-                                        multiple
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={handleImageUpload}
-                                    />
-                                </label>
+                                    {isDragActive
+                                        ? 'Drop images here…'
+                                        : 'Click or Drag & Drop images'}
+                                </div>
                             )}
 
                             {previewUrls.length > 0 && (
                                 <>
+                                    {/* Thumbnail */}
                                     <div className="relative mb-4 h-64 w-full overflow-hidden rounded-lg border border-gray-300 dark:border-gray-700">
                                         <Image
                                             src={previewUrls[0]}
@@ -160,24 +174,23 @@ const CreateListingPage: React.FC = () => {
 
                                     {/* Upload More */}
                                     {previewUrls.length < 5 && (
-                                        <label className="mt-2 flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-gray-400 py-10 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+                                        <div
+                                            {...getRootProps()}
+                                            className={`mt-2 flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-gray-400 py-10 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 ${
+                                                isDragActive ? 'bg-blue-50 dark:bg-blue-900' : ''
+                                            }`}
+                                        >
+                                            <input {...getInputProps()} />
                                             <Upload className="mr-2 h-5 w-5" />
                                             Upload more images ({5 - previewUrls.length} left)
-                                            <input
-                                                type="file"
-                                                multiple
-                                                accept="image/*"
-                                                className="hidden"
-                                                onChange={handleImageUpload}
-                                            />
-                                        </label>
+                                        </div>
                                     )}
                                 </>
                             )}
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN */}
+                    {/* RIGHT COLUMN — FORM */}
                     <div className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
                         <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
                             Item Details
