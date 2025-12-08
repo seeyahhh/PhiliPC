@@ -1,9 +1,9 @@
 'use server';
 
 import { z } from 'zod';
-import { pool } from '@/app/lib/db';
 import { redirect } from 'next/navigation';
 import { createSession } from '@/app/lib/session';
+import { signUp } from '@/app/lib/queries/signUp';
 
 export type SignupState =
     | {
@@ -11,6 +11,7 @@ export type SignupState =
               first_name?: string[];
               last_name?: string[];
               middle_name?: string[];
+              email?: string[];
               contact_no?: string[];
               username?: string[];
               password?: string[];
@@ -25,6 +26,7 @@ const signupSchema = z
         first_name: z.string().min(1, { message: 'First name is required' }).trim(),
         middle_name: z.string().optional(),
         last_name: z.string().min(1, { message: 'Last name is required' }).trim(),
+        email: z.email({ message: 'Invalid email address' }).trim(),
         contact_no: z
             .string()
             .regex(/^09\d{9}$/, { message: 'Contact number must be in format 09XXXXXXXXX' })
@@ -54,43 +56,28 @@ export async function signup(prevState: SignupState, formData: FormData): Promis
         };
     }
 
-    const { first_name, middle_name, last_name, contact_no, username, password } = result.data;
+    const { first_name, middle_name, last_name, email, contact_no, username, password } =
+        result.data;
 
-    try {
-        // Check if username already exists
-        const [existingUsers] = await pool.query(
-            'SELECT user_id FROM users WHERE username = ? OR contact_no = ?',
-            [username, contact_no]
-        );
+    const signUpResult = await signUp(
+        first_name,
+        middle_name || '',
+        last_name,
+        email,
+        contact_no,
+        username,
+        password
+    );
 
-        if (Array.isArray(existingUsers) && existingUsers.length > 0) {
-            return {
-                errors: {
-                    general: ['Username or contact number already exists'],
-                },
-            };
-        }
-
-        // Hash the password (in production, use bcrypt or similar)
-        // For now, storing plain text - THIS SHOULD BE CHANGED IN PRODUCTION
-        const [insertResult] = await pool.query(
-            'INSERT INTO users (first_name, middle_name, last_name, contact_no, username, password) VALUES (?, ?, ?, ?, ?, ?)',
-            [first_name, middle_name || null, last_name, contact_no, username, password]
-        );
-
-        const userId = (insertResult as any).insertId;
-
-        // Create session for the new user
-        await createSession(String(userId));
-
-        // Redirect to products page after successful signup
-        redirect('/products');
-    } catch (error) {
-        console.error('Signup error:', error);
+    if (!signUpResult.success) {
         return {
             errors: {
-                general: ['An error occurred during signup. Please try again.'],
+                general: [signUpResult.error || 'An error occurred during signup'],
             },
         };
     }
+
+    await createSession(String(signUpResult.userId));
+
+    redirect('/products');
 }

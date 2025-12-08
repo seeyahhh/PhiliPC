@@ -9,6 +9,7 @@ const SignupPage: React.FC = () => {
     const [firstName, setFirstName] = useState('');
     const [middleName, setMiddleName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
     const [contactNo, setContactNo] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -99,6 +100,30 @@ const SignupPage: React.FC = () => {
                         </label>
                         {state?.errors?.last_name && (
                             <p className="mt-1 text-xs text-red-600">{state.errors.last_name[0]}</p>
+                        )}
+                    </div>
+
+                    {/* Email Input */}
+                    <div className="relative z-0">
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder=" "
+                            className="focus:outline-primary focus:border-primary peer z-5 block w-full rounded-md border border-gray-300 bg-transparent px-2 py-2.5 pt-5 text-sm text-gray-900 shadow-sm hover:cursor-text focus:ring-0"
+                        />
+                        <label
+                            htmlFor="email"
+                            className="text-neutral peer-focus:text-primary absolute top-3 z-10 origin-left -translate-y-2 scale-75 transform px-3 text-sm duration-300 peer-placeholder-shown:translate-y-1 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-2 peer-focus:scale-75 hover:cursor-text rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 peer-focus:dark:text-blue-500"
+                        >
+                            Email Address
+                        </label>
+                        {state?.errors?.email && (
+                            <p className="mt-1 text-xs text-red-600">{state.errors.email[0]}</p>
                         )}
                     </div>
 
