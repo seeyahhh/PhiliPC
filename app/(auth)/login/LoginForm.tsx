@@ -14,13 +14,6 @@ const LoginForm: React.FC<LogInFormProps> = ({ action }: { action: any }) => {
     const [isRemembered, setIsRemembered] = useState(false);
     const [state, loginAction] = useActionState<LoginState>(action, undefined);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-        e.preventDefault();
-        console.log('Logging in with:', { username, password });
-
-        // connect to backend
-    };
-
     return (
         <div className="relative bottom-10 z-10 m-auto flex w-full max-w-md flex-col rounded-lg bg-white p-8 shadow-md">
             <h2 className="mb-6 text-center text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">
@@ -28,11 +21,9 @@ const LoginForm: React.FC<LogInFormProps> = ({ action }: { action: any }) => {
             </h2>
             <form
                 action={loginAction}
-                // onSubmit={handleSubmit}
                 className="space-y-6"
             >
-                {/* Username Input */}
-                {state?.errors?.username && <p className="text-red-500">{state.errors.username}</p>}
+                {/* Username/Email Input */}
                 <div className="relative z-0">
                     <input
                         id="username"
@@ -49,10 +40,12 @@ const LoginForm: React.FC<LogInFormProps> = ({ action }: { action: any }) => {
                         htmlFor="username"
                         className="text-neutral peer-focus:text-primary absolute top-3 z-10 origin-left -translate-y-2 scale-75 transform px-3 text-sm duration-300 peer-placeholder-shown:translate-y-1 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-2 peer-focus:scale-75 hover:cursor-text rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 peer-focus:dark:text-blue-500"
                     >
-                        Username
+                        Username or Email
                     </label>
+                    {state?.errors?.username && (
+                        <p className="mt-1 text-xs text-red-600">{state.errors.username[0]}</p>
+                    )}
                 </div>
-
                 {/* Password Input */}
                 <div className="relative z-0">
                     <input
@@ -72,8 +65,10 @@ const LoginForm: React.FC<LogInFormProps> = ({ action }: { action: any }) => {
                     >
                         Password
                     </label>
-                </div>
-
+                    {state?.errors?.password && (
+                        <p className="mt-1 text-xs text-red-600">{state.errors.password[0]}</p>
+                    )}
+                </div>{' '}
                 {/* Remember me Checkbox */}
                 <div className="flex gap-3">
                     <input
@@ -93,7 +88,6 @@ const LoginForm: React.FC<LogInFormProps> = ({ action }: { action: any }) => {
                         Remember Me
                     </label>
                 </div>
-
                 {/* Submit Button */}
                 <div>
                     <button

@@ -15,7 +15,7 @@ export type LoginState =
     | undefined;
 
 const loginSchema = z.object({
-    username: z.string().email({ message: 'Invalid email address' }).trim(),
+    username: z.string().min(1, { message: 'Username or email is required' }).trim(),
     password: z.string().min(3, { message: 'Password must be at least 3 characters' }).trim(),
 });
 
@@ -35,7 +35,7 @@ export async function login(prevState: LoginState, formData: FormData): Promise<
     if (!fetchedUser.data) {
         return {
             errors: {
-                username: ['Invalid username or password'],
+                username: ['Invalid username/email or password'],
             },
         };
     }
