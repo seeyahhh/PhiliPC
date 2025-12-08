@@ -1,37 +1,61 @@
-import { createConnection } from '@/app/lib/db';
+import { pool } from '@/app/lib/db';
+import { verifySession } from '@/app/lib/session';
+import { User } from '@/app/data/types';
 
-export async function getUser(username) {
-    const db = await createConnection();
+interface UserProfile extends User {
+    listings?: any[];
+    reviews?: any[];
+}
 
-    const [user] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+export async function getUser(username: string): Promise<UserProfile | null> {
+    const [users] = await pool.query<any[]>('SELECT * FROM users WHERE username = ?', [username]);
 
-    const { user_id } = user[0];
+    if (!Array.isArray(users) || users.length === 0) {
+        return null;
+    }
 
-    const [listings] = await db.query('SELECT * FROM products WHERE seller_id = ?', [user_id]);
+    const user = users[0];
+    const { user_id } = user;
 
-    const [reviews] = await db.query(
+    const [listings] = await pool.query('SELECT * FROM products WHERE seller_id = ?', [user_id]);
+
+    const [reviews] = await pool.query(
         `SELECT *
-                                    FROM reviews
-                                    WHERE transac_id IN 
-                                      (
-                                        SELECT transac_id 
-                                            FROM transactions t
-                                            JOIN products p
-                                            ON t.listing_id = p.listing_id
-                                            WHERE t.listing_id IN 
-                                          (
-                                            SELECT listing_id
-                                                    FROM products 
-                                                    WHERE seller_id = 1 AND is_avail = 0
-                                                )
-                                        );`,
+            FROM reviews
+            WHERE transac_id IN (
+                SELECT transac_id 
+                FROM transactions t
+                JOIN products p ON t.listing_id = p.listing_id
+                WHERE t.listing_id IN (
+                    SELECT listing_id
+                    FROM products 
+                    WHERE seller_id = ? AND is_avail = 0
+                )
+            )`,
         [user_id]
     );
 
-    console.log(reviews);
+    return {
+        ...user,
+        listings: Array.isArray(listings) ? listings : [],
+        reviews: Array.isArray(reviews) ? reviews : [],
+    };
+}
 
-    user[0]['listings'] = listings;
-    user[0]['reviews'] = reviews;
+export async function getCurrentUser(): Promise<UserProfile | null> {
+    const session = await verifySession();
 
-    return user[0];
+    if (!session) {
+        return null;
+    }
+
+    const [users] = await pool.query<any[]>('SELECT * FROM users WHERE user_id = ?', [
+        session.userId,
+    ]);
+
+    if (!Array.isArray(users) || users.length === 0) {
+        return null;
+    }
+
+    return users[0];
 }

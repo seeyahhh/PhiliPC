@@ -18,9 +18,4 @@ export const userSettings: UserSetting[] = [
         label: 'Settings',
         href: '/settings',
     },
-    {
-        id: 3,
-        label: 'Logout',
-        href: '/logout',
-    },
 ];

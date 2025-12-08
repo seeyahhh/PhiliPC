@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useFormState } from 'react-dom';
+import React, { useActionState, useState } from 'react';
 import Link from 'next/link';
 import { login, LoginState } from './actions';
 
@@ -9,7 +8,7 @@ const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isRemembered, setIsRemembered] = useState(false);
-    const [state, loginAction] = useFormState<LoginState, FormData>(login, undefined);
+    const [state, loginAction] = useActionState<LoginState, FormData>(login, undefined);
 
     return (
         <>

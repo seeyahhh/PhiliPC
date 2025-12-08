@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { moreItems, NavItem, navItems } from '@/app/data/navItems';
@@ -11,7 +11,16 @@ import ThemeToggle from '@/app/components/ThemeToggle';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { logout } from '@/app/(auth)/login/actions';
 
+interface User {
+    user_id: number;
+    username: string;
+    first_name: string;
+    last_name: string;
+    profile_pic_url?: string | null;
+}
+
 const Navigation: React.FC = () => {
+    const [user, setUser] = useState<User | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -20,6 +29,32 @@ const Navigation: React.FC = () => {
 
     const initialSearch = searchParams.get('search') || '';
     const [search, setSearch] = useState(initialSearch);
+
+    // Fetch user session on mount
+    useEffect(() => {
+        const fetchUser = async (): Promise<void> => {
+            try {
+                const response = await fetch('/api/session');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUser(data.user || null);
+                }
+            } catch (error) {
+                console.error('Failed to fetch user:', error);
+                setUser(null);
+            }
+        };
+        fetchUser();
+    }, []);
+
+    const handleLogout = async (): Promise<void> => {
+        try {
+            await logout();
+            setUser(null);
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent): void => {
         e.preventDefault();
@@ -79,59 +114,81 @@ const Navigation: React.FC = () => {
                             </Link>
                         </div>
 
-                        {/* Dekstop User Icon */}
+                        {/* Desktop User Icon */}
                         <div className="relative hidden md:inline">
-                            {/* <button
-                                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                className="flex items-center text-white hover:text-blue-400"
-                            >
-                                <CircleUser
-                                    className={`ms-1 h-8 w-8 transition-transform duration-200`}
-                                />
-                            </button> */}
-                            <div className="flex items-center justify-center gap-2 text-white">
-                                {/* fetch isLoggedIn from api/session */}
-                                {/* isLoggedIn = false */}
-                                <Link
-                                    type="button"
-                                    className="hover:text-dark-primary text-xs text-nowrap text-white hover:cursor-pointer"
-                                    href={'/signup'}
-                                >
-                                    Sign Up
-                                </Link>
-                                <div className="text-xs">|</div>
-                                <Link
-                                    type="button"
-                                    className="hover:text-dark-primary text-xs text-nowrap text-white hover:cursor-pointer"
-                                    href={'/login'}
-                                >
-                                    Log In
-                                </Link>
-                                {/* isLoggedIn = false */}
-                                {/* isLoggedIn = true */}
-                                <form action={logout}>
-                                    <button className="hover:text-dark-primary text-xs text-nowrap text-white hover:cursor-pointer">
-                                        Log Out
+                            {user ? (
+                                <>
+                                    <button
+                                        onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                        className="flex items-center gap-2 text-white hover:text-blue-400"
+                                    >
+                                        {user.profile_pic_url ? (
+                                            <Image
+                                                src={user.profile_pic_url}
+                                                alt={`${user.first_name} ${user.last_name}`}
+                                                width={32}
+                                                height={32}
+                                                className="rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <CircleUser className="h-8 w-8" />
+                                        )}
+                                        <span className="text-sm">
+                                            {user.first_name} {user.last_name}
+                                        </span>
                                     </button>
-                                </form>
-                                {/* isLoggedIn = true */}
-                            </div>
-                            {/* Desktop User Menu */}
-                            {userMenuOpen && (
-                                <ul className="absolute right-0 z-50 mt-2 w-50 rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
-                                    {userSettings.map((userSettings) => (
-                                        <li key={userSettings.id}>
-                                            <Link
-                                                href="/user/profile"
-                                                className="block px-4 py-2 text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                                            >
-                                                <div className="font-semibold">
-                                                    {userSettings.label}
-                                                </div>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
+                                    {/* Desktop User Menu */}
+                                    {userMenuOpen && (
+                                        <ul className="absolute right-0 z-50 mt-2 w-50 rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
+                                            <li>
+                                                <Link
+                                                    href={`/users/${user.username}`}
+                                                    className="block px-4 py-2 text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                                                >
+                                                    <div className="font-semibold">
+                                                        View Profile
+                                                    </div>
+                                                </Link>
+                                            </li>
+                                            {userSettings.map((setting) => (
+                                                <li key={setting.id}>
+                                                    <Link
+                                                        href={setting.href}
+                                                        className="block px-4 py-2 text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                                                    >
+                                                        <div className="font-semibold">
+                                                            {setting.label}
+                                                        </div>
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                            <li>
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="block w-full px-4 py-2 text-left text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                                                >
+                                                    <div className="font-semibold">Log Out</div>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    )}
+                                </>
+                            ) : (
+                                <div className="flex items-center justify-center gap-2 text-white">
+                                    <Link
+                                        className="text-xs text-nowrap hover:cursor-pointer hover:text-blue-400"
+                                        href="/signup"
+                                    >
+                                        Sign Up
+                                    </Link>
+                                    <div className="text-xs">|</div>
+                                    <Link
+                                        className="text-xs text-nowrap hover:cursor-pointer hover:text-blue-400"
+                                        href="/login"
+                                    >
+                                        Log In
+                                    </Link>
+                                </div>
                             )}
                         </div>
                     </div>
