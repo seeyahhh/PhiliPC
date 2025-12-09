@@ -16,6 +16,14 @@ export type Product = {
     images?: string[];
 };
 
+export interface CreateProductInput {
+    name: string;
+    price: number;
+    conditioning: string;
+    description: string;
+    location: string;
+}
+
 export type User = {
     user_id: number;
     first_name: string;

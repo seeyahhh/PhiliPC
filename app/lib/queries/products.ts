@@ -1,5 +1,14 @@
-import { Product, Row } from '@/app/data/types';
+import { CreateProductInput, Product, Row } from '@/app/data/types';
 import { pool } from '@/app/lib/db';
+import { QueryResult } from 'mysql2';
+
+interface GetProductResponse {
+    success: boolean;
+    message: string;
+    data: {
+        products: Product[];
+    } | null;
+}
 
 interface GetProductResponse {
     success: boolean;
@@ -31,4 +40,19 @@ export async function getProducts(): Promise<GetProductResponse> {
             products: products,
         },
     };
+}
+
+export async function postProduct(data: CreateProductInput): Promise<QueryResult> {
+    try {
+        const query = `INSERT INTO products (name, price, condition, description, location) VALUES (?, ?, ?, ?, ?)`;
+
+        const values = [data.name, data.price, data.conditioning, data.description, data.location];
+
+        const [result] = await pool.execute(query, values);
+
+        return result;
+    } catch (error) {
+        console.log(error);
+        return {};
+    }
 }
