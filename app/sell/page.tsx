@@ -120,7 +120,7 @@ const CreateListingPage: React.FC = () => {
                                         <button
                                             type="button"
                                             onClick={() => removeImage(0)}
-                                            className="absolute top-2 right-2 rounded-full bg-black/60 p-1 text-white"
+                                            className="absolute top-2 right-2 rounded-full bg-black/60 p-1 text-white hover:cursor-pointer hover:bg-black/50 hover:text-red-500"
                                         >
                                             <Trash2 size={16} />
                                         </button>
@@ -144,7 +144,7 @@ const CreateListingPage: React.FC = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => removeImage(index + 1)}
-                                                        className="absolute top-1 right-1 rounded-full bg-black/60 p-1 text-white"
+                                                        className="absolute top-1 right-1 rounded-full bg-black/60 p-1 text-white hover:cursor-pointer hover:bg-black/50 hover:text-red-500"
                                                     >
                                                         <Trash2 size={14} />
                                                     </button>
@@ -157,7 +157,7 @@ const CreateListingPage: React.FC = () => {
                                     {previewUrls.length < 5 && (
                                         <div
                                             {...getRootProps()}
-                                            className={`mt-2 flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-gray-400 py-10 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 ${
+                                            className={`mt-2 flex flex-1 cursor-pointer items-center justify-center rounded-lg border border-dashed border-gray-400 py-10 text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 ${
                                                 isDragActive ? 'bg-blue-50 dark:bg-blue-900' : ''
                                             }`}
                                         >
