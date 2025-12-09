@@ -4,6 +4,11 @@ import { z } from 'zod';
 import { redirect } from 'next/navigation';
 import { postProduct } from '@/app/lib/queries/products';
 import { verifySession } from '@/app/lib/session';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { r2 } from '@/app/lib/r2';
+import { pool } from '@/app/lib/db';
+import { Row } from '@/app/data/types';
+import crypto from 'crypto';
 
 export type CreateListingState =
     | {
@@ -57,8 +62,6 @@ export async function createListing(
 
     // Extract images before validation
     const images = formData.getAll('images') as File[];
-
-    // Remove images from formData for validation
     formData.delete('images');
 
     // Validate form data
@@ -106,15 +109,12 @@ export async function createListing(
 
         // Upload images
         if (images.length > 0) {
-            const imageFormData = new FormData();
-            images.forEach((image) => {
-                if (image.size > 0) {
-                    imageFormData.append('images', image);
+            const validImages = images.filter((image) => image instanceof File && image.size > 0);
+            if (validImages.length > 0) {
+                const uploadResult = await uploadProductImages(productId, validImages);
+                if (!uploadResult.success) {
+                    console.warn('Image upload warning:', uploadResult.message);
                 }
-            });
-
-            if (imageFormData.has('images')) {
-                await uploadProductImages(productId, imageFormData);
             }
         }
     } catch (error) {
@@ -131,16 +131,67 @@ export async function createListing(
 
 async function uploadProductImages(
     listingId: number,
-    formData: FormData
+    files: File[]
 ): Promise<{ success: boolean; message: string }> {
     try {
-        const response = await fetch(`/api/products/${listingId}/images`, {
-            method: 'POST',
-            body: formData,
-        });
+        // Check current image count
+        const [existingImages] = await pool.query<Row<{ count: number }>[]>(
+            'SELECT COUNT(*) as count FROM product_images WHERE listing_id = ?',
+            [listingId]
+        );
+        const currentCount = existingImages[0]?.count || 0;
 
-        const result = await response.json();
-        return result;
+        if (currentCount + files.length > 5) {
+            return {
+                success: false,
+                message: `Can only upload ${5 - currentCount} more images (max 5)`,
+            };
+        }
+
+        const uploadedUrls: string[] = [];
+
+        for (const file of files) {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                continue;
+            }
+
+            // Validate file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                continue;
+            }
+
+            // Generate unique filename
+            const fileExtension = file.name.split('.').pop();
+            const fileName = `products/${listingId}/${crypto.randomUUID()}.${fileExtension}`;
+
+            // Convert file to buffer
+            const buffer = Buffer.from(await file.arrayBuffer());
+
+            // Upload to R2
+            await r2.send(
+                new PutObjectCommand({
+                    Bucket: process.env.R2_BUCKET_NAME!,
+                    Key: fileName,
+                    Body: buffer,
+                    ContentType: file.type,
+                })
+            );
+
+            // Save to database
+            const imageUrl = `${process.env.R2_PUBLIC_DOMAIN}/${fileName}`;
+            await pool.execute(
+                'INSERT INTO product_images (listing_id, image_url, display_order) VALUES (?, ?, ?)',
+                [listingId, imageUrl, currentCount + uploadedUrls.length + 1]
+            );
+
+            uploadedUrls.push(imageUrl);
+        }
+
+        return {
+            success: true,
+            message: `${uploadedUrls.length} images uploaded successfully`,
+        };
     } catch (error) {
         console.error('Upload images error:', error);
         return {
