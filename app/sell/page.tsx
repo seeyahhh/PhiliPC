@@ -178,7 +178,13 @@ const CreateListingPage: React.FC = () => {
                         </h2>
 
                         <form
-                            action={formAction}
+                            action={(formData) => {
+                                // Add images to FormData
+                                images.forEach((image) => {
+                                    formData.append('images', image);
+                                });
+                                formAction(formData);
+                            }}
                             className="space-y-4"
                         >
                             {/* General Error */}

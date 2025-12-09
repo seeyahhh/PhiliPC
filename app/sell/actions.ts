@@ -55,6 +55,12 @@ export async function createListing(
         };
     }
 
+    // Extract images before validation
+    const images = formData.getAll('images') as File[];
+
+    // Remove images from formData for validation
+    formData.delete('images');
+
     // Validate form data
     const result = createListingSchema.safeParse(Object.fromEntries(formData));
 
@@ -67,7 +73,7 @@ export async function createListing(
     const { category, item_name, item_price, item_condition, item_location, item_description } =
         result.data;
 
-    let productId: number | undefined;
+    let productId: number;
 
     try {
         const response = await postProduct({
@@ -88,7 +94,7 @@ export async function createListing(
             };
         }
 
-        productId = response.data?.products?.insertId;
+        productId = response.data?.products?.insertId || 0;
 
         if (!productId) {
             return {
@@ -96,6 +102,20 @@ export async function createListing(
                     general: ['Failed to get product ID'],
                 },
             };
+        }
+
+        // Upload images
+        if (images.length > 0) {
+            const imageFormData = new FormData();
+            images.forEach((image) => {
+                if (image.size > 0) {
+                    imageFormData.append('images', image);
+                }
+            });
+
+            if (imageFormData.has('images')) {
+                await uploadProductImages(productId, imageFormData);
+            }
         }
     } catch (error) {
         console.error('Create listing error:', error);
@@ -107,4 +127,25 @@ export async function createListing(
     }
 
     redirect(`/products/${productId}`);
+}
+
+async function uploadProductImages(
+    listingId: number,
+    formData: FormData
+): Promise<{ success: boolean; message: string }> {
+    try {
+        const response = await fetch(`/api/products/${listingId}/images`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Upload images error:', error);
+        return {
+            success: false,
+            message: 'Failed to upload images',
+        };
+    }
 }
