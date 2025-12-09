@@ -10,11 +10,11 @@ interface GetProductResponse {
     } | null;
 }
 
-interface GetProductResponse {
+interface PostProductResponse {
     success: boolean;
     message: string;
     data: {
-        products: Product[];
+        products: QueryResult;
     } | null;
 }
 
@@ -42,17 +42,35 @@ export async function getProducts(): Promise<GetProductResponse> {
     };
 }
 
-export async function postProduct(data: CreateProductInput): Promise<QueryResult> {
+export async function postProduct(data: CreateProductInput): Promise<PostProductResponse> {
     try {
-        const query = `INSERT INTO products (name, price, condition, description, location) VALUES (?, ?, ?, ?, ?)`;
+        const query = `INSERT INTO products (seller_id, category, item_name, item_condition, item_description, item_location) 
+                                    VALUES (?, 'GPU', ?, ?, ?, ?)`;
 
-        const values = [data.name, data.price, data.conditioning, data.description, data.location];
+        const values = [
+            data.seller_id,
+            data.name,
+            data.price,
+            data.conditioning,
+            data.description,
+            data.location,
+        ];
 
         const [result] = await pool.execute(query, values);
 
-        return result;
+        return {
+            success: true,
+            message: 'Product Posted Successfully',
+            data: {
+                products: result,
+            },
+        };
     } catch (error) {
         console.log(error);
-        return {};
+        return {
+            success: false,
+            message: 'Failed to Create Product',
+            data: null,
+        };
     }
 }

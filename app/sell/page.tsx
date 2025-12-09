@@ -10,13 +10,14 @@ import { conditionOptions } from '@/app/data/searchFilters';
 import Dropdown from '@/app/components/Dropdown';
 import Image from 'next/image';
 import { useDropzone } from 'react-dropzone';
+import { UserSession } from '@/app/data/types';
 
 const CreateListingPage: React.FC = () => {
     const router = useRouter();
 
+    const [user, setUser] = useState<UserSession | null>(null);
     const [images, setImages] = useState<File[]>([]);
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-
     const [itemName, setItemName] = useState('');
     const [price, setPrice] = useState('');
     const [condition, setCondition] = useState('');
@@ -56,9 +57,14 @@ const CreateListingPage: React.FC = () => {
         setLoading(true);
 
         try {
+            const response = await fetch('/api/session');
+            const data = await response.json();
+            setUser(data.user);
+            console.log(user);
             const res = await fetch('/api/products', {
                 method: 'POST',
                 body: JSON.stringify({
+                    seller_id: user?.user_id,
                     item_name: itemName,
                     item_price: price,
                     item_condition: condition,
@@ -66,19 +72,19 @@ const CreateListingPage: React.FC = () => {
                     item_location: location,
                 }),
             });
-
+            console.log(res);
             const json = await res.json();
             const productId = json?.data?.product_id;
 
-            for (const file of images) {
-                const formData = new FormData();
-                formData.append('image', file);
+            // for (const file of images) {
+            //     const formData = new FormData();
+            //     formData.append('image', file);
 
-                await fetch(`/api/products/${productId}/images`, {
-                    method: 'POST',
-                    body: formData,
-                });
-            }
+            //     await fetch(`/api/products/${productId}/images`, {
+            //         method: 'POST',
+            //         body: formData,
+            //     });
+            // }
 
             router.push(`/product/${productId}`);
         } catch (error) {
