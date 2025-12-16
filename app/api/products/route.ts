@@ -7,20 +7,20 @@ export async function GET(req: Request): Promise<Response> {
     const category = searchParams.get('category') || '';
     const search = searchParams.get('search') || '';
     const condition = searchParams.get('condition') || '';
-    const minPrice = searchParams.get('minPrice') || ''//'0';
-    const maxPrice = searchParams.get('maxPrice') || ''//'50000';
+    const minPrice = searchParams.get('minPrice') || ''; //'0';
+    const maxPrice = searchParams.get('maxPrice') || ''; //'50000';
     const sort = searchParams.get('sort') || '';
 
     const filters = {
-        category, 
-        search, 
-        condition, 
-        minPrice, 
-        maxPrice, 
+        category,
+        search,
+        condition,
+        minPrice,
+        maxPrice,
         sort,
     };
-    
-    if (filters) {
+
+    if (category || search || condition || minPrice || maxPrice || sort) {
         const products = await filterProducts(filters);
         return Response.json(products);
     }

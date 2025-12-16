@@ -19,8 +19,8 @@ const ProductsPage: React.FC = () => {
     const categoryQuery = searchParams.get('category') || '';
     const searchQuery = searchParams.get('search') || '';
     const conditionQuery = searchParams.get('condition') || '';
-    const minPriceQuery = searchParams.get('minPrice') || ''//'0';
-    const maxPriceQuery = searchParams.get('maxPrice') || ''//'50000';
+    const minPriceQuery = searchParams.get('minPrice') || ''; //'0';
+    const maxPriceQuery = searchParams.get('maxPrice') || ''; //'50000';
     const sortQuery = searchParams.get('sort') || '';
 
     const [condition, setCondition] = useState(conditionQuery);
