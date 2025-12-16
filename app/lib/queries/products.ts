@@ -31,10 +31,13 @@ interface Filters {
 export async function getProducts(): Promise<GetProductResponse> {
     const [products] = await pool.query<
         Row<Product>[]
-    >(`SELECT products.*, CONCAT(users.first_name, " ", users.last_name) AS full_name 
-                                      FROM products 
-                                      JOIN users 
-                                      ON products.seller_id = users.user_id;`);
+    >(`SELECT p.*, CONCAT(u.first_name, " ", u.last_name) AS full_name, pi.image_url
+            FROM products p
+            JOIN users u
+                ON p.seller_id = u.user_id
+            LEFT JOIN product_images pi
+                ON p.listing_id = pi.listing_id
+                AND pi.is_cover = 1;`);
     if (products.length === 0) {
         return {
             success: false,
@@ -89,14 +92,15 @@ export async function postProduct(data: CreateProductInput): Promise<PostProduct
     }
 }
 
-export async function getByProductCategory(type: String): Promise<GetProductResponse> {
-  const [products] = await pool.query<
-        Row<Product>[]
-    >(`SELECT products.*, CONCAT(users.first_name, " ", users.last_name) AS full_name 
+export async function getByProductCategory(type: string): Promise<GetProductResponse> {
+    const [products] = await pool.query<Row<Product>[]>(
+        `SELECT products.*, CONCAT(users.first_name, " ", users.last_name) AS full_name 
                                       FROM products 
                                       JOIN users 
                                       ON products.seller_id = users.user_id
-                                      AND products.category = ?;`, type);
+                                      AND products.category = ?;`,
+        type
+    );
     if (products.length === 0) {
         return {
             success: false,
@@ -115,15 +119,17 @@ export async function getByProductCategory(type: String): Promise<GetProductResp
 }
 
 export async function filterProducts(filters: Filters): Promise<GetProductResponse> {
-
     let conditions = '';
 
     if (filters.category) conditions += ` AND products.category = '${filters.category}'`;
     if (filters.search) conditions += ` AND products.item_name LIKE '%${filters.search}%'`;
     if (filters.condition) conditions += ` AND products.item_condition = '${filters.condition}'`;
-    if (filters.maxPrice && !filters.minPrice) conditions += ` AND products.item_price <= ${parseFloat(filters.maxPrice)}`;
-    if (!filters.maxPrice && filters.minPrice) conditions += ` AND products.item_price >= ${parseFloat(filters.minPrice)}`;
-    if (filters.maxPrice && filters.minPrice) conditions += ` AND products.item_price BETWEEN ${parseFloat(filters.minPrice)} AND ${filters.maxPrice}`;
+    if (filters.maxPrice && !filters.minPrice)
+        conditions += ` AND products.item_price <= ${parseFloat(filters.maxPrice)}`;
+    if (!filters.maxPrice && filters.minPrice)
+        conditions += ` AND products.item_price >= ${parseFloat(filters.minPrice)}`;
+    if (filters.maxPrice && filters.minPrice)
+        conditions += ` AND products.item_price BETWEEN ${parseFloat(filters.minPrice)} AND ${filters.maxPrice}`;
     if (filters.sort) conditions += `  ORDER BY products.item_price ${filters.sort}`;
 
     conditions += ';';
@@ -135,23 +141,20 @@ export async function filterProducts(filters: Filters): Promise<GetProductRespon
 
     query = query += conditions;
 
-    const [products] = await pool.query<
-            Row<Product>[]
-        >(query);
-        if (products.length === 0) {
-            return {
-                success: false,
-                message: 'Products does not exist',
-                data: null,
-            };
-        }
-
+    const [products] = await pool.query<Row<Product>[]>(query);
+    if (products.length === 0) {
         return {
-            success: true,
-            message: 'Products Fetched Successfully',
-            data: {
-                products: products,
-            },
+            success: false,
+            message: 'Products does not exist',
+            data: null,
         };
     }
 
+    return {
+        success: true,
+        message: 'Products Fetched Successfully',
+        data: {
+            products: products,
+        },
+    };
+}

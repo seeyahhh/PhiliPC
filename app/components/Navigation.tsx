@@ -182,7 +182,6 @@ const Navigation: React.FC = () => {
                                         Log In
                                     </Link>
                                 </div>
-                                
                             )}
                         </div>
                     </div>

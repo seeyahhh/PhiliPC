@@ -6,7 +6,12 @@ export const navItems = [
     { id: 'gpu', label: 'GPU', href: '/products?category=gpu', icon: Gpu },
     { id: 'ram', label: 'RAM', href: '/products?category=ram', icon: MemoryStick },
     { id: 'memory', label: 'Memory', href: '/products?category=memory', icon: HardDrive },
-    { id: 'peripherals', label: 'Peripherals', href: '/products?category=peripherals', icon: Keyboard },
+    {
+        id: 'peripherals',
+        label: 'Peripherals',
+        href: '/products?category=peripherals',
+        icon: Keyboard,
+    },
 ];
 
 export const moreItems = [
