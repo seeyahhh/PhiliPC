@@ -26,11 +26,7 @@ const Products: React.FC<ProductProps> = ({ product, showUser = true }) => {
             {/* Image */}
             <div className="relative h-50 w-full">
                 <Image
-                    src={`${
-                        product.images
-                            ? product.images
-                            : 'https://down-ph.img.susercontent.com/file/ph-11134207-7r98v-lvk7ew0vuxfp28_tn.webp'
-                    }`}
+                    src={product.image_url || '/images/default-product-image.png'}
                     alt="Test Image"
                     fill
                 />

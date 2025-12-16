@@ -13,7 +13,7 @@ export type Product = {
     is_avail: boolean;
     full_name: string;
     username: string;
-    images?: string[];
+    image_url?: string;
 };
 
 export interface CreateProductInput {

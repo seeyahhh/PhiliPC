@@ -31,10 +31,13 @@ interface Filters {
 export async function getProducts(): Promise<GetProductResponse> {
     const [products] = await pool.query<
         Row<Product>[]
-    >(`SELECT products.*, CONCAT(users.first_name, " ", users.last_name) AS full_name 
-                                      FROM products 
-                                      JOIN users 
-                                      ON products.seller_id = users.user_id;`);
+    >(`SELECT p.*, CONCAT(u.first_name, " ", u.last_name) AS full_name, pi.image_url
+            FROM products p
+            JOIN users u
+                ON p.seller_id = u.user_id
+            LEFT JOIN product_images pi
+                ON p.listing_id = pi.listing_id
+                AND pi.is_cover = 1;`);
     if (products.length === 0) {
         return {
             success: false,
