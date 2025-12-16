@@ -42,8 +42,72 @@ const UserPage: React.FC = () => {
         fetchUser();
     }, [username]);
 
-    if (loading) return <p>Loading...</p>;
-    if (!user) return <p>User not found</p>;
+    if (loading) {
+        return (
+            <div className="min-h-screen dark:bg-gray-800">
+                <Navigation />
+                <div className="mx-auto max-w-7xl p-6">
+                    {/* User Info Skeleton */}
+                    <div className="mb-6 animate-pulse rounded-2xl bg-linear-to-r from-gray-300 to-gray-400 px-8 py-5 shadow-xl dark:from-gray-700 dark:to-gray-600">
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-5">
+                                <div className="h-28 w-28 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+                                <div className="flex flex-col gap-3">
+                                    <div>
+                                        <div className="h-8 w-48 rounded bg-gray-400 dark:bg-gray-500"></div>
+                                        <div className="mt-2 h-4 w-32 rounded bg-gray-400 dark:bg-gray-500"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="h-8 w-8 rounded bg-gray-400 dark:bg-gray-500"></div>
+                                <div className="flex flex-col gap-1">
+                                    <div className="h-6 w-12 rounded bg-gray-400 dark:bg-gray-500"></div>
+                                    <div className="h-3 w-20 rounded bg-gray-400 dark:bg-gray-500"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Tabs Skeleton */}
+                    <div className="mb-4 flex gap-4 border-b border-gray-300 dark:border-gray-500">
+                        <div className="h-10 w-24 rounded-t bg-gray-300 dark:bg-gray-600"></div>
+                        <div className="h-10 w-24 rounded-t bg-gray-300 dark:bg-gray-600"></div>
+                    </div>
+
+                    {/* Content Skeleton */}
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                        {[1, 2, 3, 4].map((i) => (
+                            <div
+                                key={i}
+                                className="animate-pulse rounded-lg bg-white p-4 shadow dark:bg-gray-700"
+                            >
+                                <div className="mb-3 h-48 rounded bg-gray-300 dark:bg-gray-600"></div>
+                                <div className="mb-2 h-4 w-3/4 rounded bg-gray-300 dark:bg-gray-600"></div>
+                                <div className="h-4 w-1/2 rounded bg-gray-300 dark:bg-gray-600"></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return (
+            <div className="min-h-screen dark:bg-gray-800">
+                <Navigation />
+                <div className="flex flex-col items-center justify-center py-20">
+                    <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
+                        User Not Found
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        The user you&apos;re looking for doesn&apos;t exist.
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen dark:bg-gray-800">
