@@ -103,32 +103,6 @@ export async function postProduct(data: CreateProductInput): Promise<PostProduct
     }
 }
 
-export async function getByProductCategory(type: string): Promise<GetProductResponse> {
-    const [products] = await pool.query<Row<Product>[]>(
-        `SELECT products.*, CONCAT(users.first_name, " ", users.last_name) AS full_name 
-                                      FROM products 
-                                      JOIN users 
-                                      ON products.seller_id = users.user_id
-                                      AND products.category = ?;`,
-        type
-    );
-    if (products.length === 0) {
-        return {
-            success: false,
-            message: 'Products does not exist',
-            data: null,
-        };
-    }
-
-    return {
-        success: true,
-        message: 'Products Fetched Successfully',
-        data: {
-            products: products,
-        },
-    };
-}
-
 export async function filterProducts(filters: Filters): Promise<GetProductResponse> {
     let conditions = '';
 
