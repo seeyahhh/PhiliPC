@@ -58,4 +58,9 @@ export type Review = {
     image?: string;
 };
 
+export type RatingSummary = {
+    avg_rating: number;
+    count: number;
+};
+
 export type Row<T> = T & RowDataPacket;

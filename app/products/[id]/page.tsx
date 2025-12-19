@@ -255,8 +255,13 @@ const ProductDetailPage: React.FC = () => {
 
                     {/* Product Info */}
                     <div className="space-y-6">
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                        <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900 dark:text-white">
                             {product.item_name}
+                            <span
+                                className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${product.is_avail ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-700'}`}
+                            >
+                                {product.is_avail ? 'Available' : 'Sold'}
+                            </span>
                         </h1>
                         <p className="text-primary mt-2 text-4xl font-bold">
                             ₱{product.item_price}
@@ -388,12 +393,12 @@ const ProductDetailPage: React.FC = () => {
                 )}
 
                 {/* Reviews */}
-                <div className="mb-8 rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
+                {/* <div className="mb-8 rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
                     <h3 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
                         Seller Reviews
                     </h3>
                     <div className="space-y-4">
-                        {/* {product.map((review) => (
+                        {product.map((review) => (
                             <div
                                 key={review.id}
                                 className="border-b border-gray-200 pb-4 last:border-b-0 dark:border-gray-700"
@@ -416,9 +421,9 @@ const ProductDetailPage: React.FC = () => {
                                 </div>
                                 <p className="text-gray-700 dark:text-gray-300">{review.comment}</p>
                             </div>
-                        ))} */}
+                        ))}
                     </div>
-                </div>
+                </div> */}
 
                 {/* Recommendations */}
                 {recommendations.length > 0 && (
@@ -432,6 +437,7 @@ const ProductDetailPage: React.FC = () => {
                                     key={r.listing_id}
                                     product={r}
                                     showUser
+                                    showStatus={false}
                                 />
                             ))}
                         </div>
