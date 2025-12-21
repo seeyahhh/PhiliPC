@@ -70,4 +70,14 @@ export type RatingSummary = {
     count: number;
 };
 
+export type Offer = {
+    offer_id: number;
+    listing_id: number;
+    buyer_id: number;
+    offer_price: number;
+    offer_status: 'Pending' | 'Accepted' | 'Rejected';
+    created_at: string;
+    buyer_name?: string;
+};
+
 export type Row<T> = T & RowDataPacket;

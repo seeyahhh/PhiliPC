@@ -38,7 +38,6 @@ const ProductDetailPage: React.FC = () => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
     const [offerPrice, setOfferPrice] = useState('');
-    const [offerMessage, setOfferMessage] = useState('');
     const [offerError, setOfferError] = useState('');
     const [offerStatus, setOfferStatus] = useState<'idle' | 'success'>('idle');
 
@@ -155,16 +154,38 @@ const ProductDetailPage: React.FC = () => {
         setIsOfferModalOpen(false);
     };
 
-    const handleOfferSubmit = (): void => {
+    const handleOfferSubmit = async (): Promise<void> => {
         const numericPrice = Number(offerPrice);
         if (!Number.isFinite(numericPrice) || numericPrice <= 0) {
             setOfferError('Enter a valid offer amount.');
             return;
         }
 
-        setOfferError('');
-        setOfferStatus('success');
-        setIsOfferModalOpen(false);
+        if (!product) {
+            setOfferError('Product not found');
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/products/${product.listing_id}/offers`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ offer_price: numericPrice }),
+            });
+
+            const json = await res.json();
+            if (!res.ok || !json.success) {
+                setOfferError(json.message || 'Failed to submit offer');
+            } else {
+                setOfferError('');
+                setOfferStatus('success');
+                setOfferPrice('');
+                setIsOfferModalOpen(false);
+            }
+        } catch (error) {
+            console.error('Offer submission error:', error);
+            setOfferError('Failed to submit offer');
+        }
     };
 
     return (
