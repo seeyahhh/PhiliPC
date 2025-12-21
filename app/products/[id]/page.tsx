@@ -297,7 +297,7 @@ const ProductDetailPage: React.FC = () => {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-3xl font-bold text-blue-500 dark:text-white">
-                                        ₱{product.item_price}
+                                        ₱ {product.item_price}
                                     </p>
                                 </div>
                                 <div className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold tracking-wide text-blue-700 uppercase dark:bg-blue-900/30 dark:text-blue-200">
@@ -516,7 +516,13 @@ const ProductDetailPage: React.FC = () => {
             {isOfferModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
                     <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-gray-100 dark:bg-gray-900 dark:ring-gray-700">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={closeOfferModal}
+                                className="rounded-full border border-gray-200 p-2 hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-500"
+                            >
+                                <ArrowLeft className="h-4 w-4" />
+                            </button>
                             <div>
                                 <p className="text-xs font-semibold tracking-wide text-blue-600 uppercase dark:text-blue-200">
                                     Make an offer
@@ -525,15 +531,14 @@ const ProductDetailPage: React.FC = () => {
                                     {product?.item_name}
                                 </h3>
                             </div>
-                            <button
-                                onClick={closeOfferModal}
-                                className="rounded-full border border-gray-200 p-2 hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-500"
-                            >
-                                <ArrowLeft className="h-4 w-4" />
-                            </button>
                         </div>
 
                         <div className="mt-4 space-y-4">
+                            {offerError && (
+                                <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800 ring-1 ring-red-200 dark:bg-red-900/20 dark:text-red-200 dark:ring-red-800/40">
+                                    {offerError}
+                                </div>
+                            )}
                             <div>
                                 <label className="mb-1 block text-sm font-medium text-gray-900 dark:text-white">
                                     Your offer (₱)
@@ -544,11 +549,12 @@ const ProductDetailPage: React.FC = () => {
                                     value={offerPrice}
                                     onChange={(e) => setOfferPrice(e.target.value)}
                                     className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                                    placeholder={`e.g., ${product ? Math.max(0, Number(product.item_price) - 500).toFixed(0) : '0'}`}
+                                    placeholder={`e.g., 1000`}
                                 />
                             </div>
 
-                            <div>
+                            {/* Message Input */}
+                            {/* <div>
                                 <label className="mb-1 block text-sm font-medium text-gray-900 dark:text-white">
                                     Message (optional)
                                 </label>
@@ -559,18 +565,9 @@ const ProductDetailPage: React.FC = () => {
                                     className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                                     placeholder="Share preferred meetup time or condition notes"
                                 />
-                            </div>
-
-                            {offerError && (
-                                <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800 ring-1 ring-red-200 dark:bg-red-900/20 dark:text-red-200 dark:ring-red-800/40">
-                                    {offerError}
-                                </div>
-                            )}
+                            </div> */}
 
                             <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                                <span className="rounded-full bg-gray-100 px-2.5 py-1 dark:bg-gray-800">
-                                    No upfront payments
-                                </span>
                                 <span className="rounded-full bg-gray-100 px-2.5 py-1 dark:bg-gray-800">
                                     Meet in a safe place
                                 </span>
@@ -582,13 +579,13 @@ const ProductDetailPage: React.FC = () => {
                             <div className="flex gap-3">
                                 <button
                                     onClick={handleOfferSubmit}
-                                    className="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+                                    className="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:cursor-pointer hover:bg-blue-700"
                                 >
                                     Send Offer
                                 </button>
                                 <button
                                     onClick={closeOfferModal}
-                                    className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+                                    className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:cursor-pointer hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
                                 >
                                     Cancel
                                 </button>
