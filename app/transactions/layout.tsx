@@ -14,7 +14,7 @@ const TransactionsLayout: React.FC<{ children: ReactNode }> = ({
     return (
         <div className="flex min-h-screen flex-col dark:bg-gray-800">
             <Navigation />
-            <div className="mx-auto max-w-7xl flex-1 flex-col p-6">
+            <div className="mx-auto w-full max-w-7xl flex-1 flex-col p-6">
                 {/* Page Header */}
                 <div className="mx-auto mt-4 flex max-w-7xl gap-2 p-4">
                     <Link
