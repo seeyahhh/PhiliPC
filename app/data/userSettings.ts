@@ -11,7 +11,7 @@ export const userSettings: UserSetting[] = [
     {
         id: 1,
         label: 'Transactions',
-        href: '/transaction',
+        href: '/transactions',
         icon: ShoppingCart,
     },
     {
