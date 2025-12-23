@@ -15,17 +15,37 @@ const TransactionSummary: React.FC = () => {
     useEffect(() => {
         const fetchSummary = async (): Promise<void> => {
             try {
-                const res = await fetch('/api/transactions');
-                if (!res.ok) throw new Error('Failed to fetch transactions');
-                const json = await res.json();
-                if (json.success && json.data) {
-                    setSummary({
-                        purchases: json.data.asBuyer.length,
-                        sales: json.data.asSeller.length,
-                        sentOffers: json.data.sentOffers.length,
-                        receivedOffers: json.data.receivedOffers.length,
-                    });
+                const [purchasesRes, salesRes, sentOffersRes, receivedOffersRes] =
+                    await Promise.all([
+                        fetch('/api/transactions/purchases'),
+                        fetch('/api/transactions/sales'),
+                        fetch('/api/transactions/sent-offers'),
+                        fetch('/api/transactions/received-offers'),
+                    ]);
+
+                if (
+                    !purchasesRes.ok ||
+                    !salesRes.ok ||
+                    !sentOffersRes.ok ||
+                    !receivedOffersRes.ok
+                ) {
+                    throw new Error('Failed to fetch transactions');
                 }
+
+                const [purchasesJson, salesJson, sentOffersJson, receivedOffersJson] =
+                    await Promise.all([
+                        purchasesRes.json(),
+                        salesRes.json(),
+                        sentOffersRes.json(),
+                        receivedOffersRes.json(),
+                    ]);
+
+                setSummary({
+                    purchases: purchasesJson.data?.length || 0,
+                    sales: salesJson.data?.length || 0,
+                    sentOffers: sentOffersJson.data?.length || 0,
+                    receivedOffers: receivedOffersJson.data?.length || 0,
+                });
             } catch (error) {
                 console.error('Error fetching summary:', error);
             } finally {

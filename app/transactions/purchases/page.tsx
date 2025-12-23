@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Package, Star } from 'lucide-react';
-import { Transaction } from '@/app/lib/queries/transactions';
+import { Transaction } from '@/app/data/types';
 
 const PurchasesPage: React.FC = () => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -13,11 +13,11 @@ const PurchasesPage: React.FC = () => {
     useEffect(() => {
         const fetchTransactions = async (): Promise<void> => {
             try {
-                const res = await fetch('/api/transactions');
+                const res = await fetch('/api/transactions/purchases');
                 if (!res.ok) throw new Error('Failed to fetch transactions');
                 const json = await res.json();
                 if (json.success && json.data) {
-                    setTransactions(json.data.asBuyer);
+                    setTransactions(json.data);
                 }
             } catch (error) {
                 console.error('Error fetching purchases:', error);

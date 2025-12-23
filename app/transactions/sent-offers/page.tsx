@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Package } from 'lucide-react';
-import { OfferWithDetails } from '@/app/lib/queries/transactions';
+import { OfferWithDetails } from '@/app/data/types';
 
 const SentOffersPage: React.FC = () => {
     const [offers, setOffers] = useState<OfferWithDetails[]>([]);
@@ -13,11 +13,11 @@ const SentOffersPage: React.FC = () => {
     useEffect(() => {
         const fetchOffers = async (): Promise<void> => {
             try {
-                const res = await fetch('/api/transactions');
-                if (!res.ok) throw new Error('Failed to fetch transactions');
+                const res = await fetch('/api/transactions/sent-offers');
+                if (!res.ok) throw new Error('Failed to fetch offers');
                 const json = await res.json();
                 if (json.success && json.data) {
-                    setOffers(json.data.sentOffers);
+                    setOffers(json.data);
                 }
             } catch (error) {
                 console.error('Error fetching sent offers:', error);
