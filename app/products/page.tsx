@@ -77,10 +77,10 @@ const ProductsPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
             <Navigation />
 
-            <div className="mx-auto mt-4 flex max-w-7xl gap-2 p-4">
+            <div className="mx-auto mt-4 flex w-full max-w-7xl gap-2 p-4">
                 <Link
                     className="hover:cursor-pointer"
                     href={'/'}
@@ -89,7 +89,7 @@ const ProductsPage: React.FC = () => {
                 </Link>
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">Item Listing</h1>
             </div>
-            <div className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl flex-1 px-4 pb-6 sm:px-6 lg:px-8">
                 {/* Search and Filter Header */}
                 <div className="mb-6 rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
                     <div className="mb-4 flex items-center justify-between">

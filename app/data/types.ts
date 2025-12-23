@@ -80,4 +80,41 @@ export type Offer = {
     buyer_name?: string;
 };
 
+export type Transaction = {
+    transac_id: number;
+    listing_id: number;
+    buyer_id: number;
+    transac_done: boolean;
+    created_at: string;
+    item_name: string;
+    item_price: number;
+    item_condition: string;
+    image_url?: string;
+    seller_name: string;
+    seller_username: string;
+    buyer_name: string;
+    buyer_username: string;
+    review_rating?: number;
+    review_text?: string;
+    review_id?: number;
+};
+
+export type OfferWithDetails = {
+    offer_id: number;
+    listing_id: number;
+    buyer_id: number;
+    seller_id: number;
+    offer_price: number;
+    offer_status: 'Pending' | 'Accepted' | 'Rejected';
+    created_at: string;
+    item_name: string;
+    item_price: number;
+    image_url?: string;
+    seller_name: string;
+    seller_username: string;
+    buyer_name: string;
+    buyer_username: string;
+    item_condition: string;
+};
+
 export type Row<T> = T & RowDataPacket;

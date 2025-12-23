@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { moreItems, NavItem, navItems } from '@/app/data/navItems';
 import { userSettings } from '@/app/data/userSettings';
 import Button from '@/app/components/Button';
-import { Search, ChevronDown, CircleUser, Menu } from 'lucide-react';
+import { Search, ChevronDown, CircleUser, Menu, User2, LogOut } from 'lucide-react';
 import ThemeToggle from '@/app/components/ThemeToggle';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { logout } from '@/app/(auth)/login/actions';
@@ -132,34 +132,45 @@ const Navigation: React.FC = () => {
                                     </button>
                                     {/* Desktop User Menu */}
                                     {userMenuOpen && (
-                                        <ul className="absolute right-0 z-50 mt-2 w-50 rounded-md border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
+                                        <ul className="absolute right-0 z-50 mt-2 w-50 rounded-lg border border-gray-200 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800">
                                             <li>
                                                 <Link
                                                     href={`/users/${user.username}`}
-                                                    className="block px-4 py-2 text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                                                    className="flex w-full gap-2 rounded-md p-2 text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                                                 >
+                                                    <div className="">
+                                                        <User2 />
+                                                    </div>
                                                     <div className="font-semibold">
                                                         View Profile
                                                     </div>
                                                 </Link>
                                             </li>
-                                            {userSettings.map((setting) => (
-                                                <li key={setting.id}>
-                                                    <Link
-                                                        href={setting.href}
-                                                        className="block px-4 py-2 text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                                                    >
-                                                        <div className="font-semibold">
-                                                            {setting.label}
-                                                        </div>
-                                                    </Link>
-                                                </li>
-                                            ))}
+                                            {userSettings.map(({ id, href, label, icon: Icon }) => {
+                                                return (
+                                                    <li key={id}>
+                                                        <Link
+                                                            href={href}
+                                                            className="flex w-full gap-2 rounded-md p-2 text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                                                        >
+                                                            <div className="">
+                                                                <Icon />
+                                                            </div>
+                                                            <div className="font-semibold">
+                                                                {label}
+                                                            </div>
+                                                        </Link>
+                                                    </li>
+                                                );
+                                            })}
                                             <li>
                                                 <button
                                                     onClick={handleLogout}
-                                                    className="block w-full px-4 py-2 text-left text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                                                    className="flex w-full gap-2 rounded-md p-2 text-gray-900 hover:cursor-pointer hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                                                 >
+                                                    <div className="">
+                                                        <LogOut />
+                                                    </div>
                                                     <div className="font-semibold">Log Out</div>
                                                 </button>
                                             </li>
