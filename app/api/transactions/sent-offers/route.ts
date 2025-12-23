@@ -15,13 +15,8 @@ export async function GET(): Promise<NextResponse> {
 
         const [offers] = await pool.query<Row<OfferWithDetails>[]>(
             `SELECT 
-                o.offer_id,
-                o.listing_id,
-                o.buyer_id,
+                o.*,
                 p.seller_id,
-                o.offer_price,
-                o.offer_status,
-                o.created_at,
                 p.item_name,
                 p.item_price,
                 p.item_condition,

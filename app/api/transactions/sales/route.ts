@@ -15,11 +15,7 @@ export async function GET(): Promise<NextResponse> {
 
         const [transactions] = await pool.query<Row<Transaction>[]>(
             `SELECT 
-                t.transac_id,
-                t.listing_id,
-                t.buyer_id,
-                t.transac_done,
-                t.created_at,
+                t.*,
                 p.item_name,
                 p.item_price,
                 p.item_condition,
@@ -28,9 +24,7 @@ export async function GET(): Promise<NextResponse> {
                 u.username AS seller_username,
                 CONCAT(buyer.first_name, ' ', buyer.last_name) AS buyer_name,
                 buyer.username AS buyer_username,
-                r.review_rating,
-                r.review_text,
-                r.review_id
+                r.*
             FROM transactions t
             JOIN products p ON t.listing_id = p.listing_id
             JOIN users u ON p.seller_id = u.user_id
