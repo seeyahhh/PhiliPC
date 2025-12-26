@@ -12,6 +12,11 @@ interface GetUserResponse {
     } | null;
 }
 
+interface UpdateUserResponse {
+    success: boolean;
+    message: string;
+}
+
 export async function getUser(username: string): Promise<GetUserResponse> {
     const [users] = await pool.query<Row<User>[]>(`SELECT * FROM users WHERE username = ?`, [
         username,
@@ -73,4 +78,23 @@ export async function getUser(username: string): Promise<GetUserResponse> {
             reviews: reviews,
         },
     };
+}
+
+export async function updateUser(id: number, username: string): Promise<UpdateUserResponse> {
+    
+    if(username) {
+        try {
+            await pool.execute("UPDATE users SET username = ? WHERE id = ?" , [username, id]);
+        } catch(err) {
+            return {
+                success: false, 
+                message: String(err)
+            }
+        }
+    }
+    
+    return {
+        success : true,
+        message: "User updated successfully"
+    }
 }
