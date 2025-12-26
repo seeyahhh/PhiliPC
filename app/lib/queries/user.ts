@@ -84,14 +84,20 @@ export async function updateUser(id: number, username: string): Promise<UpdateUs
     
     if(username) {
         try {
-            await pool.execute("UPDATE users SET username = ? WHERE id = ?" , [username, id]);
+            console.log(id);
+            console.log(username);
+            await pool.execute("UPDATE users SET username = ? WHERE user_id = ?" , [username, id]);
+            
         } catch(err) {
+            console.log(err);
             return {
                 success: false, 
                 message: String(err)
             }
         }
     }
+
+    console.log("gumana baksss");
     
     return {
         success : true,

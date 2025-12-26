@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { UserSession, User} from '@/app/data/types';
+// etong function na to laman yung galing sa lib/queries, which is yung gumagawa ng sql update mismo 
 import { update } from './actions';
 
 // fetch natin yung user information then display sa page, then lagay tayo ng parang button na maglalabas ng input thingy para maedit na yung page ganun
@@ -12,10 +13,7 @@ const CreateSettingsPage: React.FC = () => {
     const [username, setUsername] = useState<String>("");
     const [id, setId] = useState<Number>();
 
-    const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      update(id, username);
-    };
+    // fetching session 
     React.useEffect(() => {
           const fetchUser = async (): Promise<void> => {
               try {
@@ -33,6 +31,7 @@ const CreateSettingsPage: React.FC = () => {
           fetchUser();
       }, []);
 
+    // using id from session to fetch all user information to display on the page.
     React.useEffect(() => {
       if (!user?.username) return;
 
@@ -64,16 +63,7 @@ const CreateSettingsPage: React.FC = () => {
       <form action={update}>
         <input type="hidden" name="id" value={id ?? ""}></input>
         <div className="row">
-          <input id="name" placeholder="Change name"></input><button type="submit">Change</button>
-        </div>
-        <div className="row">
-          <input id="username" placeholder="Change username"></input><button>Change</button>
-        </div>
-        <div className="row">
-          <input id="email" placeholder="Change email"></input><button>Change</button>
-        </div>
-        <div className="row">
-          <input id="password" placeholder="Change password"></input><button>Change</button>
+          <input name="username" placeholder="Change username"></input><button>Change</button>
         </div>
       </form>
     </>
