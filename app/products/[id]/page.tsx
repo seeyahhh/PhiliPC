@@ -361,7 +361,12 @@ const ProductDetailPage: React.FC = () => {
                                         {/* Offer*/}
                                         <button
                                             onClick={openOfferModal}
-                                            className="bg-primary items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white shadow-sm hover:cursor-pointer hover:bg-blue-700 dark:bg-blue-600"
+                                            disabled={!product.is_avail}
+                                            className={`items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold shadow-sm ${
+                                                product.is_avail
+                                                    ? 'bg-primary text-white hover:cursor-pointer hover:bg-blue-700 dark:bg-blue-600'
+                                                    : 'cursor-not-allowed bg-gray-400 text-gray-700 dark:bg-gray-600'
+                                            }`}
                                         >
                                             Make an Offer
                                         </button>
