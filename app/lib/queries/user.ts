@@ -12,6 +12,11 @@ interface GetUserResponse {
     } | null;
 }
 
+interface UpdateUserResponse {
+    success: boolean;
+    message: string;
+}
+
 export async function getUser(username: string): Promise<GetUserResponse> {
     const [users] = await pool.query<Row<User>[]>(`SELECT * FROM users WHERE username = ?`, [
         username,
@@ -73,4 +78,48 @@ export async function getUser(username: string): Promise<GetUserResponse> {
             reviews: reviews,
         },
     };
+}
+
+export async function updateUser(id: number, username: string, email: string, password: string): Promise<UpdateUserResponse> {
+    
+    let query = ""; 
+    let attributes = [];
+    if (username) attributes.push(`username = '${username}'`);
+    if (email) attributes.push(`email = '${email}'`);
+    if (password) attributes.push(`password = '${password}'`);
+
+    console.log(attributes.length);
+
+    for(let i = 0; i < attributes.length; i++) {
+       
+        query += attributes[i]; 
+
+        if (attributes.length - 1 === i) {
+            break;
+        } else {
+            query += ', ';
+        }
+
+    }
+
+    query = `UPDATE users SET ${query} WHERE user_id = ${id}`;
+
+    console.log(query);
+    if(attributes.length > 0) {
+        try {
+            await pool.execute(query);
+            
+        } catch(err) {
+            console.log(err);
+            return {
+                success: false, 
+                message: String(err)
+            }
+        }
+    }
+    
+    return {
+        success : true,
+        message: "User updated successfully"
+    }
 }
