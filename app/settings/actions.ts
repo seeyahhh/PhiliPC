@@ -1,6 +1,7 @@
 'use server';
 
 import { updateUser } from '@/app/lib/queries/user';
+import { redirect } from 'next/navigation';
 
 export type UpdateUserState = {
     success: boolean;
@@ -20,7 +21,7 @@ export async function update(
     const fb_link = String(formData.get('fb_link')) ?? null;
     const contact_no = String(formData.get('contact_no')) ?? null;
 
-    return await updateUser(
+    await updateUser(
         id,
         username,
         email,
@@ -30,4 +31,6 @@ export async function update(
         fb_link,
         contact_no
     );
+
+    redirect(`/settings`);   
 }
