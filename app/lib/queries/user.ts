@@ -80,6 +80,12 @@ export async function getUser(username: string): Promise<GetUserResponse> {
     };
 }
 
+function determineError(error: string) {
+    if (error.includes("username")) return "Username already exists.";
+    if (error.includes("email")) return "Email already used.";
+    if (error.includes("contact_no")) return "Contact number already used.";
+}
+
 export async function updateUser(
     id: number,
     username: string,
@@ -100,8 +106,6 @@ export async function updateUser(
     if (fb_link) attributes.push(`fb_link = '${fb_link}'`);
     if (contact_no) attributes.push(`contact_no = '${contact_no}'`);
 
-    console.log(attributes.length);
-
     for (let i = 0; i < attributes.length; i++) {
         query += attributes[i];
 
@@ -114,15 +118,20 @@ export async function updateUser(
 
     query = `UPDATE users SET ${query} WHERE user_id = ${id}`;
 
-    console.log(query);
     if (attributes.length > 0) {
         try {
             await pool.execute(query);
+
+            return {
+                success: true,
+                message: 'User updated successfully',
+            };
         } catch (err) {
-            console.log(err);
+            let error = String(err);
+            let error_message = determineError(error) || "An unexpected error occurred";
             return {
                 success: false,
-                message: String(err),
+                message: error_message,
             };
         }
     }
@@ -130,5 +139,5 @@ export async function updateUser(
     return {
         success: true,
         message: 'User updated successfully',
-    };
+    }
 }
