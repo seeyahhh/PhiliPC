@@ -3,7 +3,6 @@
 import React, { useState, useActionState } from 'react';
 import { UserSession, User } from '@/app/data/types';
 import Navigation from '@/app/components/Navigation';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, CircleUser, Upload } from 'lucide-react';
 import Footer from '@/app/components/Footer';
@@ -22,27 +21,25 @@ const CreateSettingsPage: React.FC = () => {
         update,
         initialState
     );
-    const [editableFields, setEditableFields] = useState<{ [key: string]: boolean }>(
-        { 
-            username: false,
-            first_name: false,
-            last_name: false,
-            fb_link: false,
-            email: false, 
-            contact_no: false,
-            password: false,
-        }
-    )
-
-    const [inputContent, setInputContent] = useState<{ [key: string]: string | undefined }>({
-        username: "",
-        first_name: "",
-        last_name: "",
-        fb_link: "",
-        email: "",
-        contact_no: "",
-        password: ""
+    const [editableFields, setEditableFields] = useState<{ [key: string]: boolean }>({
+        username: false,
+        first_name: false,
+        last_name: false,
+        fb_link: false,
+        email: false,
+        contact_no: false,
+        password: false,
     });
+    const [inputContent, setInputContent] = useState<{ [key: string]: string | undefined }>({
+        username: '',
+        first_name: '',
+        last_name: '',
+        fb_link: '',
+        email: '',
+        contact_no: '',
+        password: '',
+    });
+
     // fetching session
     React.useEffect(() => {
         const fetchUser = async (): Promise<void> => {
@@ -61,7 +58,7 @@ const CreateSettingsPage: React.FC = () => {
     }, []);
 
     // using id from session to fetch all user information to display on the page.
-    const fetchUserInfo = React.useEffect(() => {
+    React.useEffect(() => {
         if (!user?.username) return;
 
         const fetchUserInfo = async (): Promise<void> => {
@@ -71,7 +68,7 @@ const CreateSettingsPage: React.FC = () => {
                     const data = await response.json();
                     const userData = data?.data?.user || null;
                     setUserInfo(userData || null);
-                    setInputContent(prev => ({
+                    setInputContent((prev) => ({
                         ...prev,
                         username: userData?.username,
                         first_name: userData?.first_name,
@@ -80,7 +77,7 @@ const CreateSettingsPage: React.FC = () => {
                         email: userData?.email,
                         contact_no: userData?.contact_no,
                         password: userData?.password,
-                    }))
+                    }));
                 }
             } catch (err) {
                 console.error('Failed to fetch user info', err);
@@ -90,29 +87,29 @@ const CreateSettingsPage: React.FC = () => {
         fetchUserInfo();
     }, [user, state?.success]);
 
-    const enableInput = (inputId: string) => {
-       setEditableFields(prev => ({
-        ...prev,
-        [inputId]: true
-       }));
-    }
-
-    const cancelChanges = (inputId: string) => {
-        setInputContent(prev => ({
+    const enableInput = (inputId: string): void => {
+        setEditableFields((prev) => ({
             ...prev,
-            [inputId]: userInfo ? (userInfo[inputId as keyof User] as string) : "",
+            [inputId]: true,
+        }));
+    };
+
+    const cancelChanges = (inputId: string): void => {
+        setInputContent((prev) => ({
+            ...prev,
+            [inputId]: userInfo ? (userInfo[inputId as keyof User] as string) : '',
         }));
 
         console.log(inputContent[inputId]);
-        setEditableFields(prev => ({
+        setEditableFields((prev) => ({
             ...prev,
-            [inputId]: false
+            [inputId]: false,
         }));
-    }
+    };
 
-    const revertChanges = () => {
-        setInputContent(prev => ({
-            ...prev, 
+    const revertChanges = (): void => {
+        setInputContent((prev) => ({
+            ...prev,
             username: userInfo?.username,
             first_name: userInfo?.first_name,
             last_name: userInfo?.last_name,
@@ -120,8 +117,8 @@ const CreateSettingsPage: React.FC = () => {
             email: userInfo?.email,
             contact_no: userInfo?.contact_no,
             password: userInfo?.password,
-        }))
-    }
+        }));
+    };
 
     return (
         <>
@@ -164,15 +161,15 @@ const CreateSettingsPage: React.FC = () => {
 
                         {/** Lagyan ng name attribute lahat ng inputs here */}
 
-                        <h2 className={`mt-15 text-2xl font-bold text-gray-900
-                                        ${!state?.message && ("mb-5")}`
-                        }>
+                        <h2
+                            className={`mt-15 text-2xl font-bold text-gray-900 ${!state?.message && 'mb-5'}`}
+                        >
                             Account Details
                         </h2>
 
                         {/** Errors */}
                         {state?.message && !state.success && (
-                            <div className="my-5 py-5 px-5 border rounded-lg border-red-400 bg-red-200 text-red-600">
+                            <div className="my-5 rounded-lg border border-red-400 bg-red-200 px-5 py-5 text-red-600">
                                 {state?.message}
                             </div>
                         )}
@@ -183,27 +180,48 @@ const CreateSettingsPage: React.FC = () => {
                                     <input
                                         readOnly={!editableFields.username}
                                         name="username"
-                                        value={inputContent?.username ?? ""}
-                                        onChange={(e) => setInputContent(prev => ({ ...prev, username: e.target.value }))}
-                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300
-                                            ${!editableFields.username ? "text-gray-400 pointer-events-none" : "text-black"}
-                                        `}
+                                        value={inputContent?.username ?? ''}
+                                        onChange={(e) =>
+                                            setInputContent((prev) => ({
+                                                ...prev,
+                                                username: e.target.value,
+                                            }))
+                                        }
+                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300 ${!editableFields.username ? 'pointer-events-none text-gray-400' : 'text-black'} `}
                                     ></input>
                                     <div className="col-span-2 flex content-center">
-                                            {!editableFields.username ?  
-                                                <button type="button" className="ml-10 flex content-center items-center hover: cursor-pointer" onClick={() => enableInput('username')}>
-                                                    Change
-                                                </button> : 
-                                                <div className="flex"> 
-                                                    <button type="button" className="ml-10 text-red-400 flex content-center items-center hover: cursor-pointer" onClick={() => cancelChanges('username')}>
-                                                        Cancel
-                                                    </button>
-                                                    
-                                                    <button type="button" className="ml-10 text-green-400 flex content-center items-center hover: cursor-pointer" onClick={() => setEditableFields(prev => ({ ...prev, username: false }))}>
-                                                        Save
-                                                    </button>
-                                                </div>
-                                            }
+                                        {!editableFields.username ? (
+                                            <button
+                                                type="button"
+                                                className="hover: ml-10 flex cursor-pointer content-center items-center"
+                                                onClick={() => enableInput('username')}
+                                            >
+                                                Change
+                                            </button>
+                                        ) : (
+                                            <div className="flex">
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-red-400"
+                                                    onClick={() => cancelChanges('username')}
+                                                >
+                                                    Cancel
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-green-400"
+                                                    onClick={() =>
+                                                        setEditableFields((prev) => ({
+                                                            ...prev,
+                                                            username: false,
+                                                        }))
+                                                    }
+                                                >
+                                                    Save
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -214,26 +232,47 @@ const CreateSettingsPage: React.FC = () => {
                                         readOnly={!editableFields.first_name}
                                         name="first_name"
                                         value={inputContent?.first_name ?? undefined}
-                                        onChange={(e) => setInputContent(prev => ({ ...prev, first_name: e.target.value }))}
-                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300
-                                            ${!editableFields.first_name ? "text-gray-400 pointer-events-none" : "text-black"}
-                                        `}
+                                        onChange={(e) =>
+                                            setInputContent((prev) => ({
+                                                ...prev,
+                                                first_name: e.target.value,
+                                            }))
+                                        }
+                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300 ${!editableFields.first_name ? 'pointer-events-none text-gray-400' : 'text-black'} `}
                                     ></input>
                                     <div className="col-span-2 flex content-center">
-                                            {!editableFields.first_name ?  
-                                                <button type="button" className="ml-10 flex content-center items-center hover: cursor-pointer" onClick={() => enableInput('first_name')}>
-                                                    Change
-                                                </button> : 
-                                                <div className="flex"> 
-                                                    <button type="button" className="ml-10 text-red-400 flex content-center items-center hover: cursor-pointer" onClick={() => cancelChanges('first_name')}>
-                                                        Cancel
-                                                    </button>
-                                                    
-                                                    <button type="button" className="ml-10 text-green-400 flex content-center items-center hover: cursor-pointer" onClick={() => setEditableFields(prev => ({ ...prev, first_name: false }))}>
-                                                        Save
-                                                    </button>
-                                                </div>
-                                            }
+                                        {!editableFields.first_name ? (
+                                            <button
+                                                type="button"
+                                                className="hover: ml-10 flex cursor-pointer content-center items-center"
+                                                onClick={() => enableInput('first_name')}
+                                            >
+                                                Change
+                                            </button>
+                                        ) : (
+                                            <div className="flex">
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-red-400"
+                                                    onClick={() => cancelChanges('first_name')}
+                                                >
+                                                    Cancel
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-green-400"
+                                                    onClick={() =>
+                                                        setEditableFields((prev) => ({
+                                                            ...prev,
+                                                            first_name: false,
+                                                        }))
+                                                    }
+                                                >
+                                                    Save
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -244,26 +283,47 @@ const CreateSettingsPage: React.FC = () => {
                                         readOnly={!editableFields.last_name}
                                         name="last_name"
                                         value={inputContent?.last_name ?? undefined}
-                                        onChange={(e) => setInputContent(prev => ({ ...prev, last_name: e.target.value }))}
-                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300
-                                            ${!editableFields.last_name ? "text-gray-400 pointer-events-none" : "text-black"}
-                                        `}
+                                        onChange={(e) =>
+                                            setInputContent((prev) => ({
+                                                ...prev,
+                                                last_name: e.target.value,
+                                            }))
+                                        }
+                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300 ${!editableFields.last_name ? 'pointer-events-none text-gray-400' : 'text-black'} `}
                                     ></input>
                                     <div className="col-span-2 flex content-center">
-                                            {!editableFields.last_name ?  
-                                                <button type="button" className="ml-10 flex content-center items-center hover: cursor-pointer" onClick={() => enableInput('last_name')}>
-                                                    Change
-                                                </button> : 
-                                                <div className="flex"> 
-                                                    <button type="button" className="ml-10 text-red-400 flex content-center items-center hover: cursor-pointer" onClick={() => cancelChanges('last_name')}>
-                                                        Cancel
-                                                    </button>
-                                                    
-                                                    <button type="button" className="ml-10 text-green-400 flex content-center items-center hover: cursor-pointer" onClick={() => setEditableFields(prev => ({ ...prev, last_name: false }))}>
-                                                        Save
-                                                    </button>
-                                                </div>
-                                            }
+                                        {!editableFields.last_name ? (
+                                            <button
+                                                type="button"
+                                                className="hover: ml-10 flex cursor-pointer content-center items-center"
+                                                onClick={() => enableInput('last_name')}
+                                            >
+                                                Change
+                                            </button>
+                                        ) : (
+                                            <div className="flex">
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-red-400"
+                                                    onClick={() => cancelChanges('last_name')}
+                                                >
+                                                    Cancel
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-green-400"
+                                                    onClick={() =>
+                                                        setEditableFields((prev) => ({
+                                                            ...prev,
+                                                            last_name: false,
+                                                        }))
+                                                    }
+                                                >
+                                                    Save
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -273,27 +333,48 @@ const CreateSettingsPage: React.FC = () => {
                                     <input
                                         readOnly={!editableFields.fb_link}
                                         name="fb_link"
-                                        value={inputContent?.fb_link ?? undefined}
-                                        onChange={(e) => setInputContent(prev => ({ ...prev, fb_link: e.target.value }))}
-                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300
-                                            ${!editableFields.fb_link ? "text-gray-400 pointer-events-none" : "text-black"}
-                                        `}
+                                        value={inputContent?.fb_link ?? ''}
+                                        onChange={(e) =>
+                                            setInputContent((prev) => ({
+                                                ...prev,
+                                                fb_link: e.target.value,
+                                            }))
+                                        }
+                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300 ${!editableFields.fb_link ? 'pointer-events-none text-gray-400' : 'text-black'} `}
                                     ></input>
                                     <div className="col-span-2 flex content-center">
-                                            {!editableFields.fb_link ?  
-                                                <button type="button" className="ml-10 flex content-center items-center hover: cursor-pointer" onClick={() => enableInput('fb_link')}>
-                                                    Change
-                                                </button> : 
-                                                <div className="flex"> 
-                                                    <button type="button" className="ml-10 text-red-400 flex content-center items-center hover: cursor-pointer" onClick={() => cancelChanges('fb_link')}>
-                                                        Cancel
-                                                    </button>
-                                                    
-                                                    <button type="button" className="ml-10 text-green-400 flex content-center items-center hover: cursor-pointer" onClick={() => setEditableFields(prev => ({ ...prev, fb_link: false }))}>
-                                                        Save
-                                                    </button>
-                                                </div>
-                                            }
+                                        {!editableFields.fb_link ? (
+                                            <button
+                                                type="button"
+                                                className="hover: ml-10 flex cursor-pointer content-center items-center"
+                                                onClick={() => enableInput('fb_link')}
+                                            >
+                                                Change
+                                            </button>
+                                        ) : (
+                                            <div className="flex">
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-red-400"
+                                                    onClick={() => cancelChanges('fb_link')}
+                                                >
+                                                    Cancel
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-green-400"
+                                                    onClick={() =>
+                                                        setEditableFields((prev) => ({
+                                                            ...prev,
+                                                            fb_link: false,
+                                                        }))
+                                                    }
+                                                >
+                                                    Save
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -311,26 +392,48 @@ const CreateSettingsPage: React.FC = () => {
                                         readOnly={!editableFields.email}
                                         name="email"
                                         value={inputContent?.email ?? undefined}
-                                        onChange={(e) => setInputContent(prev => ({ ...prev, email: e.target.value }))}
-                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300
-                                            ${!editableFields.email ? 'text-gray-400 pointer-events-none select-none' : 'text-black'}`}
-                                    ></input> 
-                                  
+                                        onChange={(e) =>
+                                            setInputContent((prev) => ({
+                                                ...prev,
+                                                email: e.target.value,
+                                            }))
+                                        }
+                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300 ${!editableFields.email ? 'pointer-events-none text-gray-400 select-none' : 'text-black'}`}
+                                    ></input>
+
                                     <div className="col-span-2 flex content-center">
-                                        {!editableFields.email ?  
-                                            <button type="button" className="ml-10 flex content-center items-center hover: cursor-pointer" onClick={() => enableInput('email')}>
+                                        {!editableFields.email ? (
+                                            <button
+                                                type="button"
+                                                className="hover: ml-10 flex cursor-pointer content-center items-center"
+                                                onClick={() => enableInput('email')}
+                                            >
                                                 Change
-                                            </button> : 
-                                            <div className="flex"> 
-                                                <button type="button" className="ml-10 text-red-400 flex content-center items-center hover: cursor-pointer" onClick={() => cancelChanges('email')}>
+                                            </button>
+                                        ) : (
+                                            <div className="flex">
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-red-400"
+                                                    onClick={() => cancelChanges('email')}
+                                                >
                                                     Cancel
                                                 </button>
-                                                
-                                                <button type="button" className="ml-10 text-green-400 flex content-center items-center hover: cursor-pointer" onClick={() => setEditableFields(prev => ({ ...prev, email: false }))}>
+
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-green-400"
+                                                    onClick={() =>
+                                                        setEditableFields((prev) => ({
+                                                            ...prev,
+                                                            email: false,
+                                                        }))
+                                                    }
+                                                >
                                                     Save
                                                 </button>
                                             </div>
-                                        }
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -341,25 +444,47 @@ const CreateSettingsPage: React.FC = () => {
                                         readOnly={!editableFields.contact_no}
                                         name="contact_no"
                                         value={inputContent?.contact_no ?? undefined}
-                                        onChange={(e) => setInputContent(prev => ({ ...prev, contact_no: e.target.value }))}
-                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300
-                                            ${!editableFields.contact_no ? 'text-gray-400 pointer-events-none select-none' : 'text-black'}`}
+                                        onChange={(e) =>
+                                            setInputContent((prev) => ({
+                                                ...prev,
+                                                contact_no: e.target.value,
+                                            }))
+                                        }
+                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300 ${!editableFields.contact_no ? 'pointer-events-none text-gray-400 select-none' : 'text-black'}`}
                                     ></input>
                                     <div className="col-span-1 flex content-center">
-                                        {!editableFields.contact_no ?  
-                                            <button type="button" className="ml-10 flex content-center items-center hover: cursor-pointer" onClick={() => enableInput('contact_no')}>
+                                        {!editableFields.contact_no ? (
+                                            <button
+                                                type="button"
+                                                className="hover: ml-10 flex cursor-pointer content-center items-center"
+                                                onClick={() => enableInput('contact_no')}
+                                            >
                                                 Change
-                                            </button> :
-                                            <div className="flex"> 
-                                                <button type="button" className="ml-10 text-red-400 flex content-center items-center hover: cursor-pointer" onClick={() => cancelChanges("contact_no")}>
+                                            </button>
+                                        ) : (
+                                            <div className="flex">
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-red-400"
+                                                    onClick={() => cancelChanges('contact_no')}
+                                                >
                                                     Cancel
                                                 </button>
-                                                
-                                                <button type="button" className="ml-10 text-green-400 flex content-center items-center hover: cursor-pointer" onClick={() => setEditableFields(prev => ({ ...prev, contact_no: false }))}>
+
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-green-400"
+                                                    onClick={() =>
+                                                        setEditableFields((prev) => ({
+                                                            ...prev,
+                                                            contact_no: false,
+                                                        }))
+                                                    }
+                                                >
                                                     Save
                                                 </button>
                                             </div>
-                                        }
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -367,29 +492,51 @@ const CreateSettingsPage: React.FC = () => {
                                 <p>Password</p>
                                 <div className="flex">
                                     <input
-                                        type={!editableFields.password ? "password" : "text"}
+                                        type={!editableFields.password ? 'password' : 'text'}
                                         readOnly={!editableFields.password}
                                         name="password"
                                         value={inputContent?.password ?? undefined}
-                                        onChange={(e) => setInputContent( prev => ({ ...prev, password: e.target.value }))}
-                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300
-                                            ${!editableFields.password ? 'text-gray-400 pointer-events-none select-none' : 'text-black'}`}
+                                        onChange={(e) =>
+                                            setInputContent((prev) => ({
+                                                ...prev,
+                                                password: e.target.value,
+                                            }))
+                                        }
+                                        className={`w-200 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-300 ${!editableFields.password ? 'pointer-events-none text-gray-400 select-none' : 'text-black'}`}
                                     ></input>
                                     <div className="col-span-1 flex content-center">
-                                        {!editableFields.password ?  
-                                            <button type="button" className="ml-10 flex content-center items-center hover: cursor-pointer" onClick={() => enableInput('password')}>
+                                        {!editableFields.password ? (
+                                            <button
+                                                type="button"
+                                                className="hover: ml-10 flex cursor-pointer content-center items-center"
+                                                onClick={() => enableInput('password')}
+                                            >
                                                 Change
-                                            </button> :
-                                            <div className="flex"> 
-                                                <button type="button" className="ml-10 text-red-400 flex content-center items-center hover: cursor-pointer" onClick={() => cancelChanges("password")}>
+                                            </button>
+                                        ) : (
+                                            <div className="flex">
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-red-400"
+                                                    onClick={() => cancelChanges('password')}
+                                                >
                                                     Cancel
                                                 </button>
-                                                
-                                                <button type="button" className="ml-10 text-green-400 flex content-center items-center hover: cursor-pointer" onClick={() => setEditableFields(prev => ({ ...prev, password: false }))}>
+
+                                                <button
+                                                    type="button"
+                                                    className="hover: ml-10 flex cursor-pointer content-center items-center text-green-400"
+                                                    onClick={() =>
+                                                        setEditableFields((prev) => ({
+                                                            ...prev,
+                                                            password: false,
+                                                        }))
+                                                    }
+                                                >
                                                     Save
                                                 </button>
                                             </div>
-                                        }
+                                        )}
                                     </div>
                                 </div>
                             </div>

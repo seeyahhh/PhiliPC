@@ -80,10 +80,10 @@ export async function getUser(username: string): Promise<GetUserResponse> {
     };
 }
 
-function determineError(error: string) {
-    if (error.includes("username")) return "Username already exists.";
-    if (error.includes("email")) return "Email already used.";
-    if (error.includes("contact_no")) return "Contact number already used.";
+function determineError(error: string): string | undefined {
+    if (error.includes('username')) return 'Username already exists.';
+    if (error.includes('email')) return 'Email already used.';
+    if (error.includes('contact_no')) return 'Contact number already used.';
 }
 
 export async function updateUser(
@@ -127,8 +127,8 @@ export async function updateUser(
                 message: 'User updated successfully',
             };
         } catch (err) {
-            let error = String(err);
-            let error_message = determineError(error) || "An unexpected error occurred";
+            const error = String(err);
+            const error_message = determineError(error) || 'An unexpected error occurred';
             return {
                 success: false,
                 message: error_message,
@@ -139,5 +139,5 @@ export async function updateUser(
     return {
         success: true,
         message: 'User updated successfully',
-    }
+    };
 }
