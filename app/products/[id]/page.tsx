@@ -237,8 +237,8 @@ const ProductDetailPage: React.FC = () => {
                     <div className="mb-8">
                         <SellerInfoSection
                             sellerName={product.full_name}
+                            sellerProfilePic={product.profile_pic_url || undefined}
                             sellerUsername={product.username}
-                            sellerAvatar={product.seller_avatar || undefined}
                             sellerLocation={product.item_location}
                             avgRating={seller.avg_rating}
                             reviewCount={seller.review_count}

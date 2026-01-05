@@ -17,8 +17,17 @@ const Products: React.FC<ProductProps> = ({ product, showUser = true, showStatus
             {/* User */}
             {showUser && (
                 <div className="mb-3 flex items-center gap-2">
-                    <div className="rounded-4xl bg-blue-50 p-2">
-                        <User className="h-8 w-8 text-black" />
+                    <div className="relative h-15 w-15 rounded-4xl bg-blue-50 p-2">
+                        {product.profile_pic_url ? (
+                            <Image
+                                src={product.profile_pic_url || ''}
+                                alt={`${product.full_name}`}
+                                fill
+                                className="rounded-full object-cover"
+                            />
+                        ) : (
+                            <User className="h-8 w-8 p-4 text-gray-400" />
+                        )}
                     </div>
                     <span className="text-black dark:text-white">{product.full_name}</span>
                 </div>

@@ -39,7 +39,10 @@ export async function getProducts(excludeSellerId?: number): Promise<GetProductR
     }
 
     const [products] = await pool.query<Row<Product>[]>(
-        `SELECT p.*, CONCAT(u.first_name, " ", u.last_name) AS full_name, pi.image_url
+        `SELECT p.*, 
+            CONCAT(u.first_name, " ", u.last_name) AS full_name,
+            u.profile_pic_url,
+            pi.image_url
             FROM products p
             JOIN users u
                 ON p.seller_id = u.user_id

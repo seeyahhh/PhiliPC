@@ -17,7 +17,6 @@ export async function getSpecificProduct(listingId: string): Promise<GetProductR
                 users.fb_link, 
                 username,
                 profile_pic_url,
-
                 products.*
             FROM products 
             JOIN users 

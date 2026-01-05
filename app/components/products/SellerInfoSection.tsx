@@ -7,8 +7,8 @@ import { Star, MapPin, Package, User } from 'lucide-react';
 
 interface SellerInfoSectionProps {
     sellerName: string;
+    sellerProfilePic: string | undefined;
     sellerUsername: string;
-    sellerAvatar?: string | null;
     sellerLocation: string;
     avgRating: number;
     reviewCount: number;
@@ -17,8 +17,8 @@ interface SellerInfoSectionProps {
 
 const SellerInfoSection: React.FC<SellerInfoSectionProps> = ({
     sellerName,
+    sellerProfilePic,
     sellerUsername,
-    sellerAvatar,
     sellerLocation,
     avgRating,
     reviewCount,
@@ -31,9 +31,9 @@ const SellerInfoSection: React.FC<SellerInfoSectionProps> = ({
             </h3>
             <div className="flex items-start space-x-4">
                 <div className="relative h-16 w-16 overflow-hidden rounded-full bg-gray-200">
-                    {sellerAvatar ? (
+                    {sellerProfilePic ? (
                         <Image
-                            src={sellerAvatar}
+                            src={sellerProfilePic}
                             alt={sellerName}
                             fill
                             className="object-cover"
