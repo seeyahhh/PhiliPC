@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useActionState } from 'react';
+import React, { useState, useActionState, useRef } from 'react';
 import { UserSession, User } from '@/app/data/types';
 import Navigation from '@/app/components/Navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, CircleUser, Upload } from 'lucide-react';
 import Footer from '@/app/components/Footer';
 
@@ -16,6 +17,8 @@ const CreateSettingsPage: React.FC = () => {
     const [user, setUser] = useState<UserSession | null>(null);
     const [userInfo, setUserInfo] = useState<User | null>(null);
     const [id, setId] = useState<number | null>();
+    const [profilePreview, setProfilePreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const initialState: UpdateUserState = { success: false };
     const [state, formAction, isPending] = useActionState<UpdateUserState, FormData>(
         update,
@@ -78,6 +81,9 @@ const CreateSettingsPage: React.FC = () => {
                         contact_no: userData?.contact_no,
                         password: userData?.password,
                     }));
+                    if (userData?.profile_pic_url) {
+                        setProfilePreview(userData.profile_pic_url);
+                    }
                 }
             } catch (err) {
                 console.error('Failed to fetch user info', err);
@@ -99,8 +105,6 @@ const CreateSettingsPage: React.FC = () => {
             ...prev,
             [inputId]: userInfo ? (userInfo[inputId as keyof User] as string) : '',
         }));
-
-        console.log(inputContent[inputId]);
         setEditableFields((prev) => ({
             ...prev,
             [inputId]: false,
@@ -118,6 +122,23 @@ const CreateSettingsPage: React.FC = () => {
             contact_no: userInfo?.contact_no,
             password: userInfo?.password,
         }));
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+        setProfilePreview(userInfo?.profile_pic_url || null);
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = (): void => {
+            setProfilePreview(reader.result as string);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        };
+        reader.readAsDataURL(file);
     };
 
     return (
@@ -149,14 +170,45 @@ const CreateSettingsPage: React.FC = () => {
                             Profile Picture
                         </h2>
                         <div className="flex items-center">
-                            <div>
-                                {/** insert conditional here para pag may pfp yun yung ididsplay imbes na yung circleuser */}
-                                <CircleUser className="h-25 w-25" />
+                            <div className="relative h-24 w-24 overflow-hidden rounded-full bg-gray-200">
+                                {profilePreview ? (
+                                    <Image
+                                        src={profilePreview}
+                                        alt="Profile preview"
+                                        fill
+                                        className="object-cover"
+                                    />
+                                ) : (
+                                    <CircleUser className="h-24 w-24 text-gray-400" />
+                                )}
                             </div>
-                            <div className="ml-20 flex rounded-3xl border border-gray-900 p-3">
+                            <div
+                                className="ml-20 flex rounded-3xl border border-gray-900 p-3 hover:cursor-pointer"
+                                onClick={() => fileInputRef.current?.click()}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) =>
+                                    e.key === 'Enter' && fileInputRef.current?.click()
+                                }
+                            >
                                 <Upload />
-                                <p className="ml-4">Upload Picture</p>
+                                <p className="ml-4">
+                                    {profilePreview ? 'Change Profile' : 'Upload Profile'}
+                                </p>
                             </div>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                name="profile_image"
+                                accept="image/jpeg,image/png,image/webp,image/gif"
+                                className="hidden"
+                                onChange={handleImageChange}
+                            />
+                            <input
+                                type="hidden"
+                                name="old_profile_pic_url"
+                                value={userInfo?.profile_pic_url || ''}
+                            />
                         </div>
 
                         {/** Lagyan ng name attribute lahat ng inputs here */}

@@ -94,7 +94,8 @@ export async function updateUser(
     first_name: string,
     last_name: string,
     fb_link: string,
-    contact_no: string
+    contact_no: string,
+    profile_pic_url?: string | null
 ): Promise<UpdateUserResponse> {
     let query = '';
     const attributes = [];
@@ -105,6 +106,9 @@ export async function updateUser(
     if (last_name) attributes.push(`last_name = '${last_name}'`);
     if (fb_link) attributes.push(`fb_link = '${fb_link}'`);
     if (contact_no) attributes.push(`contact_no = '${contact_no}'`);
+    if (profile_pic_url !== undefined) {
+        attributes.push(`profile_pic_url = ${profile_pic_url ? `'${profile_pic_url}'` : 'NULL'}`);
+    }
 
     for (let i = 0; i < attributes.length; i++) {
         query += attributes[i];

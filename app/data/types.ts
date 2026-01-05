@@ -42,6 +42,7 @@ export type User = {
     username: string;
     fb_link: string;
     password: string;
+    profile_pic_url?: string | null;
     image?: string;
 };
 

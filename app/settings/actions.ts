@@ -1,6 +1,7 @@
 'use server';
 
 import { updateUser } from '@/app/lib/queries/user';
+import { uploadProfileImage, deleteProfileImage } from '@/app/lib/uploadToR2';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
@@ -56,6 +57,29 @@ export async function update(
     const last_name = String(formData.get('last_name')) ?? null;
     const fb_link = String(formData.get('fb_link')) ?? null;
     const contact_no = String(formData.get('contact_no')) ?? null;
+    const profileImageFile = formData.get('profile_image') as File | null;
+    const oldProfilePicUrl = formData.get('old_profile_pic_url') as string | null;
+
+    let profilePicUrl: string | null = null;
+
+    // Handle profile image upload if a new image is provided
+    if (profileImageFile && profileImageFile.size > 0) {
+        const uploadResult = await uploadProfileImage(profileImageFile, id);
+
+        if (!uploadResult.success) {
+            return {
+                success: false,
+                message: uploadResult.error || 'Failed to upload profile image',
+            };
+        }
+
+        profilePicUrl = uploadResult.url || null;
+
+        // Delete old image if it exists
+        if (oldProfilePicUrl) {
+            await deleteProfileImage(oldProfilePicUrl);
+        }
+    }
 
     const result = await updateUser(
         id,
@@ -65,7 +89,8 @@ export async function update(
         first_name,
         last_name,
         fb_link,
-        contact_no
+        contact_no,
+        profilePicUrl !== null ? profilePicUrl : undefined
     );
 
     if (!result.success) {
