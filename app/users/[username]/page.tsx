@@ -116,9 +116,9 @@ const UserPage: React.FC = () => {
                 <div className="mb-6 flex items-center justify-between gap-4 rounded-2xl bg-linear-to-r from-[#003d4d]/85 to-[#0081b3]/85 px-8 py-5 shadow-xl dark:from-gray-900 dark:to-gray-900">
                     <div className="flex items-center gap-5">
                         <div className="relative h-28 w-28">
-                            {user.image ? (
+                            {user.profile_pic_url ? (
                                 <Image
-                                    src={user.image || ''}
+                                    src={user.profile_pic_url || ''}
                                     alt={`${user.first_name}`}
                                     fill
                                     className="rounded-full object-cover"
@@ -211,9 +211,9 @@ const UserPage: React.FC = () => {
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className="relative h-14 w-14 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-                                            {review.image ? (
+                                            {review.buyer_profile_pic ? (
                                                 <Image
-                                                    src={review.image}
+                                                    src={review.buyer_profile_pic}
                                                     alt="buyer"
                                                     fill
                                                     className="object-cover"

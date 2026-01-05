@@ -29,17 +29,33 @@ const updateProfileSchema = z.object({
         .max(20, 'Username is too long.'),
     first_name: z.string().min(1, 'First name is required.'),
     last_name: z.string().min(1, 'Last name is required.'),
-    fb_link: z.url('Must be a valid URL').or(z.literal('')),
+    fb_link: z.url('Must be a valid URL').or(z.literal('')).or(z.literal(null)),
     email: z.email('Invalid email address'),
-    contact_no: z.string().min(10, 'Invalid number'),
-    password: z.string().min(8, 'Password must be at last 8 characters long.'),
+    contact_no: z.string().min(10, 'Invalid number').or(z.literal('')).or(z.literal(null)),
+    // Allow legacy short or unchanged passwords
+    password: z.string().or(z.literal('')).or(z.literal(null)),
 });
 
 export async function update(
     prevState: UpdateUserState,
     formData: FormData
 ): Promise<UpdateUserState> {
-    const validatedFields = updateProfileSchema.safeParse(Object.fromEntries(formData.entries()));
+    const normalize = (value: FormDataEntryValue | null): string | null => {
+        if (value === null) return null;
+        if (value instanceof File) return null;
+        const str = String(value);
+        return str === 'undefined' || str === 'null' ? null : str;
+    };
+
+    const validatedFields = updateProfileSchema.safeParse({
+        username: normalize(formData.get('username')) ?? '',
+        first_name: normalize(formData.get('first_name')) ?? '',
+        last_name: normalize(formData.get('last_name')) ?? '',
+        fb_link: normalize(formData.get('fb_link')),
+        email: normalize(formData.get('email')) ?? '',
+        contact_no: normalize(formData.get('contact_no')),
+        password: normalize(formData.get('password')),
+    });
 
     if (!validatedFields.success) {
         return {
@@ -50,20 +66,24 @@ export async function update(
     }
 
     const id = Number(formData.get('id'));
-    const username = String(formData.get('username')) ?? null;
-    const email = String(formData.get('email')) ?? null;
-    const password = String(formData.get('password')) ?? null;
-    const first_name = String(formData.get('first_name')) ?? null;
-    const last_name = String(formData.get('last_name')) ?? null;
-    const fb_link = String(formData.get('fb_link')) ?? null;
-    const contact_no = String(formData.get('contact_no')) ?? null;
+    const username = normalize(formData.get('username')) ?? '';
+    const email = normalize(formData.get('email')) ?? '';
+    const password = normalize(formData.get('password')) ?? '';
+    const first_name = normalize(formData.get('first_name')) ?? '';
+    const last_name = normalize(formData.get('last_name')) ?? '';
+    const fb_link = normalize(formData.get('fb_link'));
+    const contact_no = normalize(formData.get('contact_no'));
     const profileImageFile = formData.get('profile_image') as File | null;
     const oldProfilePicUrl = formData.get('old_profile_pic_url') as string | null;
 
     let profilePicUrl: string | null = null;
 
-    // Handle profile image upload if a new image is provided
+    // If a new file is provided, delete old image first to avoid orphaned files
     if (profileImageFile && profileImageFile.size > 0) {
+        if (oldProfilePicUrl) {
+            await deleteProfileImage(oldProfilePicUrl);
+        }
+
         const uploadResult = await uploadProfileImage(profileImageFile, id);
 
         if (!uploadResult.success) {
@@ -74,11 +94,6 @@ export async function update(
         }
 
         profilePicUrl = uploadResult.url || null;
-
-        // Delete old image if it exists
-        if (oldProfilePicUrl) {
-            await deleteProfileImage(oldProfilePicUrl);
-        }
     }
 
     const result = await updateUser(

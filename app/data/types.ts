@@ -61,6 +61,7 @@ export type Review = {
     review_rating: number;
     buyer_first_name: string;
     buyer_last_name: string;
+    buyer_profile_pic: string;
     item_name: string;
     item_price: number;
     image?: string;

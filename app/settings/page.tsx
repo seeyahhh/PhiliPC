@@ -73,13 +73,13 @@ const CreateSettingsPage: React.FC = () => {
                     setUserInfo(userData || null);
                     setInputContent((prev) => ({
                         ...prev,
-                        username: userData?.username,
-                        first_name: userData?.first_name,
-                        last_name: userData?.last_name,
-                        fb_link: userData?.fb_link,
-                        email: userData?.email,
-                        contact_no: userData?.contact_no,
-                        password: userData?.password,
+                        username: userData?.username ?? '',
+                        first_name: userData?.first_name ?? '',
+                        last_name: userData?.last_name ?? '',
+                        fb_link: userData?.fb_link ?? '',
+                        email: userData?.email ?? '',
+                        contact_no: userData?.contact_no ?? '',
+                        password: userData?.password ?? '',
                     }));
                     if (userData?.profile_pic_url) {
                         setProfilePreview(userData.profile_pic_url);
@@ -114,13 +114,13 @@ const CreateSettingsPage: React.FC = () => {
     const revertChanges = (): void => {
         setInputContent((prev) => ({
             ...prev,
-            username: userInfo?.username,
-            first_name: userInfo?.first_name,
-            last_name: userInfo?.last_name,
-            fb_link: userInfo?.fb_link,
-            email: userInfo?.email,
-            contact_no: userInfo?.contact_no,
-            password: userInfo?.password,
+            username: userInfo?.username ?? '',
+            first_name: userInfo?.first_name ?? '',
+            last_name: userInfo?.last_name ?? '',
+            fb_link: userInfo?.fb_link ?? '',
+            email: userInfo?.email ?? '',
+            contact_no: userInfo?.contact_no ?? '',
+            password: userInfo?.password ?? '',
         }));
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
@@ -134,9 +134,6 @@ const CreateSettingsPage: React.FC = () => {
         const reader = new FileReader();
         reader.onloadend = (): void => {
             setProfilePreview(reader.result as string);
-            if (fileInputRef.current) {
-                fileInputRef.current.value = '';
-            }
         };
         reader.readAsDataURL(file);
     };

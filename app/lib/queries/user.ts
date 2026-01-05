@@ -48,6 +48,7 @@ export async function getUser(username: string): Promise<GetUserResponse> {
         `SELECT r.*,
                 u.first_name as buyer_first_name,
                 u.last_name as buyer_last_name,
+                u.profile_pic_url as buyer_profile_pic,
                 p.item_name,
                 p.item_price
          FROM reviews r
@@ -93,8 +94,8 @@ export async function updateUser(
     password: string,
     first_name: string,
     last_name: string,
-    fb_link: string,
-    contact_no: string,
+    fb_link?: string | null,
+    contact_no?: string | null,
     profile_pic_url?: string | null
 ): Promise<UpdateUserResponse> {
     let query = '';
@@ -104,8 +105,12 @@ export async function updateUser(
     if (password) attributes.push(`password = '${password}'`);
     if (first_name) attributes.push(`first_name = '${first_name}'`);
     if (last_name) attributes.push(`last_name = '${last_name}'`);
-    if (fb_link) attributes.push(`fb_link = '${fb_link}'`);
-    if (contact_no) attributes.push(`contact_no = '${contact_no}'`);
+    if (fb_link !== undefined) {
+        attributes.push(`fb_link = ${fb_link ? `'${fb_link}'` : 'NULL'}`);
+    }
+    if (contact_no !== undefined) {
+        attributes.push(`contact_no = ${contact_no ? `'${contact_no}'` : 'NULL'}`);
+    }
     if (profile_pic_url !== undefined) {
         attributes.push(`profile_pic_url = ${profile_pic_url ? `'${profile_pic_url}'` : 'NULL'}`);
     }
