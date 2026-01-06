@@ -3,18 +3,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-const images = [
-    'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg',
-    'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg',
-    'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg',
-    'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg',
-    'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-5.jpg',
-    'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg',
-    'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg',
-];
+
+interface Category {
+    category: string;
+}
+
+const categoryImages: Record<string, string> = {
+    CPU: '/images/categories/cpu.jpg',
+    GPU: '/images/categories/gpu.jpeg',
+    RAM: '/images/categories/ram.jpg',
+    Memory: '/images/categories/memory.jpg',
+    Peripherals: '/images/categories/peripherals.jpg',
+    Monitors: '/images/categories/monitors.jpg',
+    Miscellaneous: '/images/categories/misc.jpg',
+};
 
 const CategoriesList: React.FC = () => {
     const [visibleCount, setVisibleCount] = useState(5);
+    const [categories, setCategories] = useState<Category[]>([]);
     // State to hold scroll parameters
     const [scrollParams, setScrollParams] = useState({
         scrollLeft: 0,
@@ -23,6 +29,23 @@ const CategoriesList: React.FC = () => {
     });
     // Ref for the scrollable container
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const fetchCategories = async (): Promise<void> => {
+            try {
+                const res = await fetch('/api/categories');
+                const data = await res.json();
+                console.log('Raw API response:', data);
+                console.log('Is it an array?', Array.isArray(data));
+                console.log('First item:', data[0]);
+                setCategories(data);
+            } catch (error) {
+                console.error('Failed to fetch categories', error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     // This effect hook handles responsiveness for visibleCount
     useEffect(() => {
@@ -56,6 +79,21 @@ const CategoriesList: React.FC = () => {
         window.addEventListener('resize', updateScrollParams);
         return (): void => window.removeEventListener('resize', updateScrollParams);
     }, [visibleCount]); // Re-run when visibleCount changes
+
+    useEffect(() => {
+        if (categories.length > 0 && scrollContainerRef.current) {
+            setTimeout(() => {
+                if (scrollContainerRef.current) {
+                    const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+                    setScrollParams({
+                        scrollLeft,
+                        scrollWidth: scrollWidth || 1,
+                        clientWidth: clientWidth || 1,
+                    });
+                }
+            }, 100);
+        }
+    }, [categories]);
 
     // Handler for the scroll event on the container
     const handleScroll = (): void => {
@@ -123,25 +161,29 @@ const CategoriesList: React.FC = () => {
                         WebkitOverflowScrolling: 'touch',
                     }}
                 >
-                    {images.map((src, idx) => (
-                        <div
-                            key={idx}
-                            className="relative mx-2 h-48 shrink-0"
-                            style={{ flex: `0 0 ${itemWidthPercent}%` }}
-                        >
-                            <Image
-                                src={src}
-                                alt={`Slide ${idx + 1}`}
-                                fill
-                                className="rounded-lg object-cover shadow-md"
-                                loading="lazy"
-                            />
-                            {/* Label on bottom-left */}
-                            <div className="absolute bottom-2 left-2 z-10 rounded bg-black/50 px-2 py-1 text-sm text-white">
-                                Category {idx + 1}
+                    {categories.map((cat, idx) => {
+                        const imageSrc = categoryImages[cat.category] || '/images/default.jpg';
+
+                        return (
+                            <div
+                                key={idx}
+                                className="relative mx-2 h-48 shrink-0"
+                                style={{ flex: `0 0 ${itemWidthPercent}%` }}
+                            >
+                                <Image
+                                    src={imageSrc}
+                                    alt={cat.category}
+                                    fill
+                                    className="rounded-lg object-cover shadow-md"
+                                    loading="lazy"
+                                />
+                                {/* Label on bottom-left */}
+                                <div className="absolute bottom-2 left-2 z-10 rounded bg-black/50 px-2 py-1 text-sm text-white">
+                                    {cat.category}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
                 {/* CSS to hide scrollbar for Webkit browsers */}
                 <style>
