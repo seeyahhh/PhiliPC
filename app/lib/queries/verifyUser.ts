@@ -1,5 +1,6 @@
 import { Row, User } from '@/app/data/types';
-import { pool } from '../db';
+import { pool } from '@/app/lib/db';
+import bcrypt from 'bcryptjs';
 
 interface GetVerifyUserResponse {
     success: boolean;
@@ -15,8 +16,8 @@ export async function verifyUser(
     password: string
 ): Promise<GetVerifyUserResponse> {
     const [users] = await pool.query<Row<User>[]>(
-        `SELECT user_id FROM users WHERE (username = ? OR email = ?) AND password = ?`,
-        [username, username, password]
+        `SELECT user_id, password FROM users WHERE username = ? OR email = ?`,
+        [username, username]
     );
 
     if (users.length === 0) {
@@ -28,14 +29,32 @@ export async function verifyUser(
     }
 
     const user = users[0];
-    const user_id = user.user_id;
+    const storedPassword = user.password;
+
+    const isHashed = /^\$2[ayb]\$/.test(storedPassword);
+
+    let isPasswordValid = false;
+
+    if (isHashed) {
+        isPasswordValid = await bcrypt.compare(password, storedPassword);
+    } else {
+        isPasswordValid = password === storedPassword;
+    }
+
+    if (!isPasswordValid) {
+        return {
+            success: false,
+            message: 'User does not exist/Wrong credentials',
+            data: null,
+        };
+    }
 
     return {
         success: true,
         message: 'Logged In Successfully',
         data: {
             loggedIn: true,
-            user_id: user_id,
+            user_id: user.user_id,
         },
     };
 }
