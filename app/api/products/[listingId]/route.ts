@@ -1,4 +1,6 @@
 import { getSpecificProduct } from '@/app/lib/queries/specificProduct';
+import { pool } from '@/app/lib/db';
+import { Row } from '@/app/data/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -10,7 +12,33 @@ export async function GET(
 
         const product = await getSpecificProduct(listingId);
 
-        return NextResponse.json(product);
+        if (!product.success) {
+            return NextResponse.json(product);
+        }
+
+        // get seller id
+        const sellerId = product.data?.product?.seller_id;
+
+        if (!sellerId) {
+            return NextResponse.json(product);
+        }
+
+        // fetch seller's contact info
+        const [sellerInfo] = await pool.query<
+            Row<{
+                contact_no: string | null;
+                fb_link: string | null;
+            }>[]
+        >(`SELECT contact_no, fb_link FROM users WHERE user_id = ?`, [sellerId]);
+
+        // add seller contact info
+        return NextResponse.json({
+            ...product,
+            data: {
+                ...product.data,
+                seller: sellerInfo[0] || { contact_no: null, fb_link: null },
+            },
+        });
     } catch (error) {
         console.error('GET /products/[id] error:', error);
         return new NextResponse(
