@@ -22,6 +22,10 @@ const ProductDetailPage: React.FC = () => {
     const [product, setProduct] = useState<ProductType | null>(null);
     const [images, setImages] = useState<string[]>([]);
     const [seller, setSeller] = useState<Seller | null>(null);
+    const [sellerContact, setSellerContact] = useState<{
+        contact_no: string | null;
+        fb_link: string | null;
+    }>({ contact_no: null, fb_link: null });
     const [loading, setLoading] = useState(true);
     const [recommendations, setRecommendations] = useState<ProductType[]>([]);
     const [user, setUser] = useState<UserSession | null>(null);
@@ -53,11 +57,13 @@ const ProductDetailPage: React.FC = () => {
 
                 const product = data.product;
                 const images = data.images;
-                const seller = data.review;
+                const sellerContactInfo = data.seller;
+                const reviewStats = data.review;
 
                 setProduct(product);
                 setImages(images);
-                setSeller(seller);
+                setSeller(reviewStats);
+                setSellerContact(sellerContactInfo);
 
                 const recRes = await fetch(`/api/products?exclude=${id}&limit=4`);
                 if (!recRes.ok) throw new Error('Failed to fetch recommendations');
@@ -229,6 +235,8 @@ const ProductDetailPage: React.FC = () => {
                         onOfferClick={() => setIsOfferModalOpen(true)}
                         onDeleteClick={() => setShowDeleteModal(true)}
                         offerStatus="idle"
+                        contactNo={sellerContact?.contact_no || null}
+                        fbLink={sellerContact?.fb_link || null}
                     />
                 </div>
 
