@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface Category {
     category: string;
@@ -18,13 +19,29 @@ const categoryImages: Record<string, string> = {
     Miscellaneous: '/images/categories/misc.jpg',
 };
 
+const throttle = <T extends (...args: never[]) => void>(
+    func: T,
+    delay: number
+): ((...args: Parameters<T>) => void) => {
+    let lastCall = 0;
+    return (...args: Parameters<T>) => {
+        const now = Date.now();
+        if (now - lastCall >= delay) {
+            lastCall = now;
+            func(...args);
+        }
+    };
+};
+
 const CategoriesList: React.FC = () => {
     const [visibleCount, setVisibleCount] = useState(5);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     // State to hold scroll parameters
     const [scrollParams, setScrollParams] = useState({
         scrollLeft: 0,
-        scrollWidth: 1, // Use 1 to avoid divide-by-zero
+        scrollWidth: 1,
         clientWidth: 1,
     });
     // Ref for the scrollable container
@@ -33,70 +50,24 @@ const CategoriesList: React.FC = () => {
     useEffect(() => {
         const fetchCategories = async (): Promise<void> => {
             try {
+                setLoading(true);
                 const res = await fetch('/api/categories');
+                if (!res.ok) throw new Error('Failed to fetch categories');
                 const data = await res.json();
-                console.log('Raw API response:', data);
-                console.log('Is it an array?', Array.isArray(data));
-                console.log('First item:', data[0]);
                 setCategories(data);
-            } catch (error) {
-                console.error('Failed to fetch categories', error);
+                setError(null);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'An error occurred');
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchCategories();
     }, []);
 
-    // This effect hook handles responsiveness for visibleCount
-    useEffect(() => {
-        const handleResize = (): void => {
-            if (window.innerWidth >= 1024) setVisibleCount(5);
-            else if (window.innerWidth >= 768) setVisibleCount(3);
-            else setVisibleCount(2);
-        };
-
-        handleResize();
-        window.addEventListener('resize', handleResize);
-        return (): void => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    // This effect hook updates scroll params on resize or load
-    useEffect(() => {
-        const updateScrollParams = (): void => {
-            if (scrollContainerRef.current) {
-                const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-                setScrollParams({
-                    scrollLeft,
-                    scrollWidth: scrollWidth || 1,
-                    clientWidth: clientWidth || 1,
-                });
-            }
-        };
-
-        // Update on mount
-        updateScrollParams();
-        // Update on resize
-        window.addEventListener('resize', updateScrollParams);
-        return (): void => window.removeEventListener('resize', updateScrollParams);
-    }, [visibleCount]); // Re-run when visibleCount changes
-
-    useEffect(() => {
-        if (categories.length > 0 && scrollContainerRef.current) {
-            setTimeout(() => {
-                if (scrollContainerRef.current) {
-                    const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-                    setScrollParams({
-                        scrollLeft,
-                        scrollWidth: scrollWidth || 1,
-                        clientWidth: clientWidth || 1,
-                    });
-                }
-            }, 100);
-        }
-    }, [categories]);
-
-    // Handler for the scroll event on the container
-    const handleScroll = (): void => {
+    // Update scroll parameters
+    const updateScrollParams = useCallback((): void => {
         if (scrollContainerRef.current) {
             const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
             setScrollParams({
@@ -105,13 +76,38 @@ const CategoriesList: React.FC = () => {
                 clientWidth: clientWidth || 1,
             });
         }
-    };
+    }, []);
 
-    // Calculate item width percentage
-    const itemWidthPercent = 100 / visibleCount;
+    const handleScroll = useMemo(() => throttle(updateScrollParams, 50), [updateScrollParams]);
+
+    useEffect(() => {
+        const handleResize = (): void => {
+            if (window.innerWidth >= 1024) setVisibleCount(5);
+            else if (window.innerWidth >= 768) setVisibleCount(3);
+            else setVisibleCount(2);
+            updateScrollParams();
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return (): void => window.removeEventListener('resize', handleResize);
+    }, [updateScrollParams]);
+
+    // This effect hook updates scroll params on resize or load
+    useEffect(() => {
+        if (categories.length > 0) {
+            // Use requestAnimationFrame for smoother updates
+            requestAnimationFrame(() => {
+                // Update on mount
+                updateScrollParams();
+            });
+        }
+    }, [categories, updateScrollParams]);
+
+    const itemWidthPercent = useMemo(() => 100 / visibleCount, [visibleCount]);
 
     // --- Button Click Handlers ---
-    const nextSlide = (): void => {
+    const nextSlide = useCallback((): void => {
         if (scrollContainerRef.current) {
             const { clientWidth } = scrollContainerRef.current;
             scrollContainerRef.current.scrollBy({
@@ -119,9 +115,9 @@ const CategoriesList: React.FC = () => {
                 behavior: 'smooth',
             });
         }
-    };
+    }, []);
 
-    const prevSlide = (): void => {
+    const prevSlide = useCallback((): void => {
         if (scrollContainerRef.current) {
             const { clientWidth } = scrollContainerRef.current;
             scrollContainerRef.current.scrollBy({
@@ -129,21 +125,77 @@ const CategoriesList: React.FC = () => {
                 behavior: 'smooth',
             });
         }
-    };
+    }, []);
+
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent): void => {
+            if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return (): void => window.removeEventListener('keydown', handleKeyDown);
+    }, [nextSlide, prevSlide]);
 
     // --- Custom Scrollbar Calculations ---
-    const { scrollLeft, scrollWidth, clientWidth } = scrollParams;
-    const thumbWidthPercent = (clientWidth / scrollWidth) * 100;
-    const maxScrollLeft = scrollWidth - clientWidth;
-    // Calculate thumb position: (scrollLeft / maxScroll) * (available track space)
-    const maxThumbLeftPercent = 100 - thumbWidthPercent;
-    const thumbLeftPercent =
-        maxScrollLeft > 0 ? (scrollLeft / maxScrollLeft) * maxThumbLeftPercent : 0;
+    const scrollbarStyles = useMemo(() => {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollParams;
+        const thumbWidthPercent = (clientWidth / scrollWidth) * 100;
+        const maxScrollLeft = scrollWidth - clientWidth;
+        // Calculate thumb position: (scrollLeft / maxScroll) * (available track space)
+        const maxThumbLeftPercent = 100 - thumbWidthPercent;
+        const thumbLeftPercent =
+            maxScrollLeft > 0 ? (scrollLeft / maxScrollLeft) * maxThumbLeftPercent : 0;
+        return {
+            thumbWidth: thumbWidthPercent,
+            thumbLeft: thumbLeftPercent,
+            showPrev: scrollLeft > 1,
+            showNext: scrollLeft < maxScrollLeft - 1,
+        };
+    }, [scrollParams]);
 
-    // --- Button Visibility Logic ---
-    // Use a 1px buffer for float precision issues
-    const showPrevButton = scrollLeft > 1;
-    const showNextButton = scrollLeft < maxScrollLeft - 1;
+    // Loading state
+    if (loading) {
+        return (
+            <div className="relative mx-auto max-w-7xl p-4">
+                <div className="flex gap-4">
+                    {[...Array(visibleCount)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="h-48 animate-pulse rounded-lg bg-gray-300 dark:bg-gray-700"
+                            style={{ flex: `0 0 ${itemWidthPercent}%` }}
+                        />
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="relative mx-auto max-w-7xl p-4">
+                <div className="rounded-lg bg-red-100 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
+                    <p className="font-semibold">Error loading categories</p>
+                    <p className="text-sm">{error}</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Empty state
+    if (categories.length === 0) {
+        return (
+            <div className="relative mx-auto max-w-7xl p-4">
+                <p className="text-center text-gray-500 dark:text-gray-400">
+                    No categories available
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div className="relative mx-auto max-w-7xl p-4">
@@ -160,39 +212,44 @@ const CategoriesList: React.FC = () => {
                         // Add CSS to hide scrollbar for Chrome, Safari, Edge
                         WebkitOverflowScrolling: 'touch',
                     }}
+                    role="list"
+                    aria-label="Product categories"
                 >
                     {categories.map((cat, idx) => {
                         const imageSrc = categoryImages[cat.category] || '/images/default.jpg';
+                        const categoryUrl = `/products?category=${cat.category.toLowerCase()}`;
 
                         return (
-                            <div
-                                key={idx}
-                                className="relative mx-2 h-48 shrink-0"
+                            <Link
+                                key={`${cat.category}-${idx}`}
+                                href={categoryUrl}
+                                className="relative mx-2 block h-48 shrink-0 transition-transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-gray-900"
                                 style={{ flex: `0 0 ${itemWidthPercent}%` }}
+                                role="listitem"
+                                aria-label={`View ${cat.category} products`}
                             >
                                 <Image
                                     src={imageSrc}
-                                    alt={cat.category}
+                                    alt={`${cat.category} category`}
                                     fill
                                     className="rounded-lg object-cover shadow-md"
                                     loading="lazy"
+                                    sizes={`${itemWidthPercent}vw`}
                                 />
                                 {/* Label on bottom-left */}
-                                <div className="absolute bottom-2 left-2 z-10 rounded bg-black/50 px-2 py-1 text-sm text-white">
+                                <div className="absolute bottom-2 left-2 z-10 rounded bg-black/50 px-2 py-1 text-sm text-white backdrop-blur-sm">
                                     {cat.category}
                                 </div>
-                            </div>
+                            </Link>
                         );
                     })}
                 </div>
                 {/* CSS to hide scrollbar for Webkit browsers */}
-                <style>
-                    {`
-                        .overflow-x-auto::-webkit-scrollbar {
-                            display: none;
-                        }
-                    `}
-                </style>
+                <style jsx>{`
+                    .overflow-x-auto::-webkit-scrollbar {
+                        display: none;
+                    }
+                `}</style>
             </div>
 
             {/* Custom Scrollbar Track */}
@@ -201,27 +258,29 @@ const CategoriesList: React.FC = () => {
                 <div
                     className="bg-dark-primary dark:bg-primary h-2 rounded-full transition-all duration-100"
                     style={{
-                        width: `${thumbWidthPercent}%`,
-                        marginLeft: `${thumbLeftPercent}%`,
+                        width: `${scrollbarStyles.thumbWidth}%`,
+                        marginLeft: `${scrollbarStyles.thumbLeft}%`,
                     }}
                 />
             </div>
 
             {/* Prev button */}
-            {showPrevButton && (
+            {scrollbarStyles.showPrev && (
                 <button
                     onClick={prevSlide}
-                    className="absolute top-1/2 -left-3 z-20 -translate-y-1/2 rounded-full bg-white/70 p-2 text-black hover:bg-white dark:bg-gray-400/70"
+                    className="absolute top-1/2 -left-3 z-20 -translate-y-1/2 rounded-full bg-white/70 p-2 text-black shadow-lg transition-colors hover:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-400/70"
+                    aria-label="Previous categories"
                 >
                     <ChevronLeft className="h-6 w-6" />
                 </button>
             )}
 
             {/* Next button */}
-            {showNextButton && (
+            {scrollbarStyles.showNext && (
                 <button
                     onClick={nextSlide}
-                    className="absolute top-1/2 -right-3 z-20 -translate-y-1/2 rounded-full bg-white/70 p-2 text-black hover:bg-white dark:bg-gray-400/70"
+                    className="absolute top-1/2 -right-3 z-20 -translate-y-1/2 rounded-full bg-white/70 p-2 text-black shadow-lg transition-colors hover:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-400/70"
+                    aria-label="Next categories"
                 >
                     <ChevronRight className="h-6 w-6" />
                 </button>
