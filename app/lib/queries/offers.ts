@@ -118,6 +118,8 @@ export async function updateOfferStatus(
             return { success: false, message: 'Not authorized to update this offer' };
         }
 
+        const listingId = rows[0].listing_id;
+
         const [offerRows] = await pool.query<
             Row<{ offer_status: 'Pending' | 'Accepted' | 'Rejected' }>[]
         >('SELECT offer_status FROM offers WHERE offer_id = ?', [offerId]);
@@ -128,10 +130,19 @@ export async function updateOfferStatus(
             return { success: false, message: 'Only pending offers can be updated' };
         }
 
+        // Update the specific offer status
         await pool.execute('UPDATE offers SET offer_status = ? WHERE offer_id = ?', [
             status,
             offerId,
         ]);
+
+        // If accepted, reject all other pending offers on the same product
+        if (status === 'Accepted') {
+            await pool.execute(
+                'UPDATE offers SET offer_status = "Rejected" WHERE listing_id = ? AND offer_id != ? AND offer_status = "Pending"',
+                [listingId, offerId]
+            );
+        }
 
         return { success: true, message: `Offer ${status.toLowerCase()} successfully` };
     } catch (error) {
