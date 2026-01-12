@@ -43,7 +43,7 @@ export async function getUserSales(
             `SELECT 
                 t.*, 
                 p.item_name, 
-                p.item_price, 
+                o.offer_price, 
                 p.item_condition, 
                 pi.image_url, 
                 CONCAT(u.first_name, ' ', u.last_name) AS seller_name, 
@@ -52,12 +52,14 @@ export async function getUserSales(
                 buyer.username AS buyer_username, 
                 r.* 
             FROM transactions t 
-            JOIN products p ON t.listing_id = p.listing_id 
-            JOIN users u ON p.seller_id = u.user_id 
+            JOIN products p ON t.listing_id = p.listing_id
+            JOIN offers o ON t.listing_id = o.listing_id
+            JOIN users u ON p.seller_id = u.user_id
             JOIN users buyer ON t.buyer_id = buyer.user_id 
             LEFT JOIN product_images pi ON p.listing_id = pi.listing_id AND pi.is_cover = 1 
             LEFT JOIN reviews r ON t.transac_id = r.transac_id 
-            WHERE p.seller_id = ? 
+            WHERE p.seller_id = ? AND
+            o.offer_status = 'Accepted' 
             ORDER BY t.created_at DESC`,
             [userId]
         );

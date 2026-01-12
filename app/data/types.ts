@@ -91,6 +91,7 @@ export type Transaction = {
     created_at: string;
     item_name: string;
     item_price: number;
+    offer_price: number;
     item_condition: string;
     image_url?: string;
     seller_name: string;

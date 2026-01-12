@@ -92,7 +92,7 @@ const SalesPage: React.FC = () => {
                                 </Link>
                             </p>
                             <p className="mt-1 text-xl font-bold text-green-600 dark:text-green-400">
-                                ₱{transaction.item_price.toLocaleString()}
+                                ₱{transaction.offer_price.toLocaleString()}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-gray-500">
                                 {new Date(transaction.created_at).toLocaleDateString()}
