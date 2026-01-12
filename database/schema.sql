@@ -48,19 +48,13 @@ CREATE TABLE `offers` (
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `accept_offer_flow` AFTER UPDATE ON `offers` FOR EACH ROW BEGIN
-    IF NEW.offer_status = 'Accepted' AND OLD.offer_status != 'Accepted' THEN
+     IF NEW.offer_status = 'Accepted' AND OLD.offer_status != 'Accepted' THEN
         UPDATE products
         SET is_avail = 0
         WHERE listing_id = NEW.listing_id;
 
         INSERT INTO transactions (listing_id, buyer_id, transac_done)
         VALUES (NEW.listing_id, NEW.buyer_id, 1);
-        
-        UPDATE offers
-        SET offer_status = 'Rejected'
-        WHERE listing_id = NEW.listing_id
-          AND offer_id != NEW.offer_id
-          AND offer_status = 'Pending';
     END IF;
 END */;;
 DELIMITER ;
