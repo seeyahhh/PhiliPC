@@ -275,43 +275,64 @@ const Navigation: React.FC = () => {
             </div>
 
             {/* Mobile User Menu */}
-            {userMenuOpen && user && (
+            {userMenuOpen && (
                 <div className="lg:hidden">
                     <div className="absolute z-100 w-full max-w-7xl space-y-1 rounded-b-2xl border-b border-gray-500/70 bg-white/60 px-4 py-3 backdrop-blur-xl">
-                        <ul>
-                            <li>
-                                <Link
-                                    href={`/users/${user.username}`}
-                                    className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
-                                >
-                                    <div className="font-medium">View Profile</div>
-                                </Link>
-                            </li>
-                            {userSettings.map((item) => {
-                                return (
+                        {user ? (
+                            <ul>
+                                <li>
                                     <Link
-                                        key={item.id}
-                                        href={item.href}
-                                        onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                        href={`/users/${user.username}`}
                                         className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
                                     >
-                                        {/* <Icon className="w-5 h-5" /> */}
-                                        <div>
-                                            <div className="font-medium">{item.label}</div>
-                                        </div>
+                                        <div className="font-medium">View Profile</div>
                                     </Link>
-                                );
-                            })}
+                                </li>
+                                <li>
+                                    <Link
+                                        href={`/sell`}
+                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
+                                    >
+                                        <div className="font-medium">Sell Item</div>
+                                    </Link>
+                                </li>
+                                {userSettings.map((item) => {
+                                    return (
+                                        <Link
+                                            key={item.id}
+                                            href={item.href}
+                                            onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                            className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
+                                        >
+                                            {/* <Icon className="w-5 h-5" /> */}
+                                            <div>
+                                                <div className="font-medium">{item.label}</div>
+                                            </div>
+                                        </Link>
+                                    );
+                                })}
 
-                            <li>
-                                <button
-                                    onClick={handleLogout}
-                                    className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
-                                >
-                                    <div className="font-medium">Log Out</div>
-                                </button>
-                            </li>
-                        </ul>
+                                <li>
+                                    <button
+                                        onClick={handleLogout}
+                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
+                                    >
+                                        <div className="font-medium">Log Out</div>
+                                    </button>
+                                </li>
+                            </ul>
+                        ) : (
+                            <ul>
+                                <li>
+                                    <Link
+                                        href={`/login`}
+                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
+                                    >
+                                        <div className="font-medium">Log In / Sign Up</div>
+                                    </Link>
+                                </li>
+                            </ul>
+                        )}
                     </div>
                 </div>
             )}
