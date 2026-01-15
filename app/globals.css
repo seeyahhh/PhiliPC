@@ -1,7 +1,9 @@
 @import 'tailwindcss';
+
 @plugin 'tailwind-scrollbar' {
     nocompatible: true;
 }
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -27,6 +29,30 @@
         transform: scale(0.8);
     }
     100% {
+        transform: scale(1);
+    }
+}
+
+.animate-bounce {
+    animation: bounce 0.6s infinite;
+}
+
+.delay-0 {
+    animation-delay: 0s;
+}
+.delay-200 {
+    animation-delay: 0.2s;
+}
+.delay-400 {
+    animation-delay: 0.4s;
+}
+@keyframes bounce {
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+    40% {
         transform: scale(1);
     }
 }
