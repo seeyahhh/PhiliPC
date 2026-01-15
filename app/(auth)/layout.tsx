@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const User: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
@@ -17,13 +18,15 @@ const User: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
             <div className="relative flex flex-col items-center p-10 pt-10">
                 <div className="relative mb-20 h-15 w-60 lg:h-20 lg:w-85">
-                    <Image
-                        src="/logo.svg"
-                        alt="PhiliPC Logo"
-                        fill
-                        priority
-                        className="object-contain"
-                    />
+                    <Link href={'/'}>
+                        <Image
+                            src="/logo.svg"
+                            alt="PhiliPC Logo"
+                            fill
+                            priority
+                            className="object-contain"
+                        />
+                    </Link>
                 </div>
                 {children}
             </div>
