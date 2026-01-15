@@ -115,7 +115,7 @@ const UserPage: React.FC = () => {
                 {/* User Info */}
                 <div className="mb-6 flex items-center justify-between gap-4 rounded-2xl bg-linear-to-r from-[#003d4d]/85 to-[#0081b3]/85 px-8 py-5 shadow-xl dark:from-gray-900 dark:to-gray-900">
                     <div className="flex items-center gap-5">
-                        <div className="relative h-28 w-28">
+                        <div className="relative h-20 w-20 md:h-28 md:w-28">
                             {user.profile_pic_url ? (
                                 <Image
                                     src={user.profile_pic_url || ''}
@@ -130,7 +130,7 @@ const UserPage: React.FC = () => {
 
                         <div className="flex flex-col gap-3 text-white">
                             <div className="">
-                                <h1 className="text-2xl font-bold">
+                                <h1 className="text-xl font-bold md:text-2xl">
                                     {user.first_name} {user.last_name}
                                 </h1>
                                 <p className="text-gray-400">@{user.username}</p>

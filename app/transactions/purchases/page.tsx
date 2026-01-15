@@ -94,10 +94,10 @@ const PurchasesPage: React.FC = () => {
             {transactions.map((transaction) => (
                 <div
                     key={transaction.transac_id}
-                    className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-700"
+                    className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800"
                 >
                     <div className="flex gap-4">
-                        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg">
+                        <div className="relative h-17 w-17 shrink-0 overflow-hidden rounded-lg md:h-24 md:w-24">
                             {transaction.image_url ? (
                                 <Image
                                     src={transaction.image_url}
@@ -166,7 +166,7 @@ const PurchasesPage: React.FC = () => {
                                         setReviewText('');
                                         setReviewError('');
                                     }}
-                                    className="mt-2 rounded-lg bg-blue-600 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
+                                    className="bg-primary mt-2 rounded-lg px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
                                 >
                                     Add Review
                                 </button>

@@ -68,7 +68,7 @@ const Home: React.FC = () => {
                             ))}
                         </div>
                     )}
-                    <div className="mb-4 grid grid-flow-row gap-5 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="mb-4 grid grid-flow-row gap-5 px-2 py-5 sm:grid-cols-2 md:px-5 lg:grid-cols-3 xl:grid-cols-4">
                         {products.map((product) => {
                             return (
                                 <Products

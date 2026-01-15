@@ -277,13 +277,13 @@ const Navigation: React.FC = () => {
             {/* Mobile User Menu */}
             {userMenuOpen && (
                 <div className="lg:hidden">
-                    <div className="absolute z-100 w-full max-w-7xl space-y-1 rounded-b-2xl border-b border-gray-500/70 bg-white/60 px-4 py-3 backdrop-blur-xl">
+                    <div className="absolute z-100 w-full max-w-7xl space-y-1 rounded-b-2xl border-b border-gray-500/70 bg-white/60 px-4 py-3 backdrop-blur-xl dark:bg-gray-800/60">
                         {user ? (
                             <ul>
                                 <li>
                                     <Link
                                         href={`/users/${user.username}`}
-                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
+                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200 dark:text-white/70`}
                                     >
                                         <div className="font-medium">View Profile</div>
                                     </Link>
@@ -291,7 +291,7 @@ const Navigation: React.FC = () => {
                                 <li>
                                     <Link
                                         href={`/sell`}
-                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
+                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200 dark:text-white/70`}
                                     >
                                         <div className="font-medium">Sell Item</div>
                                     </Link>
@@ -302,7 +302,7 @@ const Navigation: React.FC = () => {
                                             key={item.id}
                                             href={item.href}
                                             onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                            className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
+                                            className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200 dark:text-white/70`}
                                         >
                                             {/* <Icon className="w-5 h-5" /> */}
                                             <div>
@@ -315,7 +315,7 @@ const Navigation: React.FC = () => {
                                 <li>
                                     <button
                                         onClick={handleLogout}
-                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
+                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200 dark:text-white/70`}
                                     >
                                         <div className="font-medium">Log Out</div>
                                     </button>

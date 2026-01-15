@@ -65,7 +65,7 @@ const ReceivedOffersPage: React.FC = () => {
                 {[1, 2, 3].map((i) => (
                     <div
                         key={i}
-                        className="h-32 animate-pulse rounded-lg bg-gray-300 dark:bg-gray-600"
+                        className="h-32 animate-pulse rounded-lg bg-gray-300 dark:bg-gray-800"
                     ></div>
                 ))}
             </div>
@@ -85,10 +85,10 @@ const ReceivedOffersPage: React.FC = () => {
             {offers.map((offer) => (
                 <div
                     key={offer.offer_id}
-                    className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-700"
+                    className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800"
                 >
                     <div className="flex gap-4">
-                        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg">
+                        <div className="relative h-17 w-17 shrink-0 overflow-hidden rounded-lg md:h-24 md:w-24">
                             {offer.image_url ? (
                                 <Image
                                     src={offer.image_url}
@@ -140,7 +140,7 @@ const ReceivedOffersPage: React.FC = () => {
                                 {new Date(offer.created_at).toLocaleDateString()}
                             </p>
                         </div>
-                        <div className="flex flex-col items-end gap-2">
+                        <div className="flex flex-col items-end justify-between gap-2">
                             <span
                                 className={`rounded-full px-3 py-1 text-xs font-semibold ${
                                     offer.offer_status === 'Accepted'
@@ -153,7 +153,7 @@ const ReceivedOffersPage: React.FC = () => {
                                 {offer.offer_status}
                             </span>
                             {offer.offer_status === 'Pending' && (
-                                <div className="flex gap-2">
+                                <div className="flex flex-wrap items-end justify-end gap-2">
                                     <button
                                         onClick={() =>
                                             handleOfferAction(

@@ -70,8 +70,8 @@ const TransactionSummary: React.FC = () => {
     }
 
     return (
-        <div className="mb-8 grid gap-4 md:grid-cols-4">
-            <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-700">
+        <div className="mb-8 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
+            <div className="flex items-center rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
                 <div className="flex items-center gap-3">
                     <ShoppingBag className="h-8 w-8 text-blue-500" />
                     <div>
@@ -80,7 +80,7 @@ const TransactionSummary: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-700">
+            <div className="flex items-center rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
                 <div className="flex items-center gap-3">
                     <Package className="h-8 w-8 text-blue-500" />
                     <div>
@@ -89,7 +89,7 @@ const TransactionSummary: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-700">
+            <div className="flex items-center rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
                 <div className="flex items-center gap-3">
                     <Send className="h-8 w-8 text-blue-500" />
                     <div>
@@ -98,7 +98,7 @@ const TransactionSummary: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-700">
+            <div className="flex items-center rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
                 <div className="flex items-center gap-3">
                     <Inbox className="h-8 w-8 text-blue-500" />
                     <div>

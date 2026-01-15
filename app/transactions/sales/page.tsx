@@ -35,7 +35,7 @@ const SalesPage: React.FC = () => {
                 {[1, 2, 3].map((i) => (
                     <div
                         key={i}
-                        className="h-32 animate-pulse rounded-lg bg-gray-300 dark:bg-gray-600"
+                        className="h-32 animate-pulse rounded-lg bg-gray-300 dark:bg-gray-800"
                     ></div>
                 ))}
             </div>
@@ -55,10 +55,10 @@ const SalesPage: React.FC = () => {
             {transactions.map((transaction) => (
                 <div
                     key={transaction.transac_id}
-                    className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-700"
+                    className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800"
                 >
                     <div className="flex gap-4">
-                        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg">
+                        <div className="relative h-17 w-17 shrink-0 overflow-hidden rounded-lg md:h-24 md:w-24">
                             {transaction.image_url ? (
                                 <Image
                                     src={transaction.image_url}

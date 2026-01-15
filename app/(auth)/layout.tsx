@@ -17,7 +17,7 @@ const User: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </div>
 
             <div className="relative flex flex-col items-center p-10 pt-10">
-                <div className="relative mb-20 h-15 w-60 lg:h-20 lg:w-85">
+                <div className="relative h-15 w-60 lg:h-20 lg:w-85">
                     <Link href={'/'}>
                         <Image
                             src="/logo.svg"

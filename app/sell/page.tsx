@@ -76,7 +76,7 @@ const CreateListingPage: React.FC = () => {
             <div className="mx-auto mt-4 flex max-w-7xl gap-2 p-4">
                 <Link
                     href="/"
-                    className="hover:cursor-pointer"
+                    className="text-gray-900 hover:cursor-pointer dark:text-white"
                 >
                     <ArrowLeft />
                 </Link>
