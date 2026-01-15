@@ -10,7 +10,7 @@ export default async function middleware(req: NextRequest): Promise<NextResponse
     const isAuthenticated = !!decryptedSession?.userId;
 
     // Protected routes that require authentication
-    const protectedPaths = ['/sell', '/settings', '/profile'];
+    const protectedPaths = ['/sell', '/settings', '/profile', '/products'];
     const isProtectedRoute = protectedPaths.some((route) => path.startsWith(route));
 
     // Auth routes that logged-in users shouldn't access
