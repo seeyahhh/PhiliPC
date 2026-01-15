@@ -326,7 +326,7 @@ const Navigation: React.FC = () => {
                                 <li>
                                     <Link
                                         href={`/login`}
-                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200`}
+                                        className={`hover:bg-dark-primary flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-black transition-all duration-200 dark:text-white/70`}
                                     >
                                         <div className="font-medium">Log In / Sign Up</div>
                                     </Link>
