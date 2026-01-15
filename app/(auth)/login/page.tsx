@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
 
     return (
         <>
-            <div className="relative bottom-10 z-10 m-auto flex w-full max-w-md flex-col rounded-lg bg-white p-8 shadow-md">
+            <div className="relative z-10 mt-10 flex w-full max-w-md flex-col rounded-lg bg-white p-8 shadow-md">
                 <h2 className="mb-6 text-center text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">
                     Welcome Back!
                 </h2>
