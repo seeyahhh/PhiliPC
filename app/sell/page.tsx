@@ -70,10 +70,10 @@ const CreateListingPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
             <Navigation />
 
-            <div className="mx-auto mt-4 flex max-w-7xl gap-2 p-4">
+            <div className="mx-auto mt-4 flex w-full max-w-7xl gap-2 p-4">
                 <Link
                     href="/"
                     className="text-gray-900 hover:cursor-pointer dark:text-white"
@@ -83,7 +83,7 @@ const CreateListingPage: React.FC = () => {
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">List an Item</h1>
             </div>
 
-            <div className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-7xl flex-1 px-4 pb-6 sm:px-6 lg:px-8">
                 <form
                     action={(formData) => {
                         // Add images to FormData

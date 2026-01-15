@@ -7,6 +7,7 @@ import Products from '@/app/components/products/Products';
 import { useParams } from 'next/navigation';
 import { Product, Review, RatingSummary, User as UserType } from '@/app/data/types';
 import { Star, User } from 'lucide-react';
+import Footer from '@/app/components/Footer';
 
 const UserPage: React.FC = () => {
     const { username } = useParams();
@@ -109,9 +110,9 @@ const UserPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen dark:bg-gray-800">
+        <div className="flex min-h-screen flex-col dark:bg-gray-800">
             <Navigation />
-            <div className="mx-auto max-w-7xl p-6">
+            <div className="mx-auto w-full max-w-7xl flex-1 p-6">
                 {/* User Info */}
                 <div className="mb-6 flex items-center justify-between gap-4 rounded-2xl bg-linear-to-r from-[#003d4d]/85 to-[#0081b3]/85 px-8 py-5 shadow-xl dark:from-gray-900 dark:to-gray-900">
                     <div className="flex items-center gap-5">
@@ -251,6 +252,7 @@ const UserPage: React.FC = () => {
                     </div>
                 )}
             </div>
+            <Footer />
         </div>
     );
 };

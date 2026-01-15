@@ -34,10 +34,10 @@ const Home: React.FC = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-200 dark:bg-gray-900">
+        <div className="flex min-h-screen flex-col bg-gray-200 dark:bg-gray-900">
             <Navigation />
             {/* Home Page */}
-            <div className="mx-3 flex flex-col">
+            <div className="mx-3 flex flex-1 flex-col">
                 <Banner />
                 {/* Recommendations */}
                 <section

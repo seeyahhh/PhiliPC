@@ -205,259 +205,263 @@ const ProductDetailPage: React.FC = () => {
         );
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
             <Navigation />
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                {/* Breadcrumb */}
-                <div className="mb-6 flex items-center space-x-2 text-sm">
-                    <button
-                        onClick={() => router.back()}
-                        className="flex items-center text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                    >
-                        <ArrowLeft className="mr-2 h-4 w-4" /> Back
-                    </button>
-                    <span className="text-gray-400">/</span>
-                    <Link
-                        href="/products"
-                        className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                    >
-                        Products
-                    </Link>
-                    <span className="text-gray-400">/</span>
-                    <span className="text-gray-900 dark:text-white">{product.item_name}</span>
-                </div>
+            <div className="w-full flex-1">
+                <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    {/* Breadcrumb */}
+                    <div className="mb-6 flex items-center space-x-2 text-sm">
+                        <button
+                            onClick={() => router.back()}
+                            className="flex items-center text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                        >
+                            <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                        </button>
+                        <span className="text-gray-400">/</span>
+                        <Link
+                            href="/products"
+                            className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                        >
+                            Products
+                        </Link>
+                        <span className="text-gray-400">/</span>
+                        <span className="text-gray-900 dark:text-white">{product.item_name}</span>
+                    </div>
 
-                <div className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
-                    {/* Image Carousel */}
-                    <ProductImageCarousel
-                        images={images}
-                        productName={product.item_name}
-                    />
-
-                    {/* Product Info */}
-                    <ProductInfoSection
-                        product={product}
-                        user={user}
-                        isAvail={product.is_avail}
-                        isOfferModalOpen={isOfferModalOpen}
-                        onOfferClick={() => setIsOfferModalOpen(true)}
-                        onDeleteClick={() => setShowDeleteModal(true)}
-                        offerStatus="idle"
-                        contactNo={sellerContact?.contact_no || null}
-                        fbLink={sellerContact?.fb_link || null}
-                    />
-                </div>
-
-                {/* Seller Info */}
-                {seller && product && (
-                    <div className="mb-8">
-                        <SellerInfoSection
-                            sellerName={product.full_name}
-                            sellerProfilePic={product.profile_pic_url || undefined}
-                            sellerUsername={product.username}
-                            sellerLocation={product.item_location}
-                            avgRating={seller.avg_rating}
-                            reviewCount={seller.review_count}
-                            productCount={seller.product_count}
+                    <div className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
+                        {/* Image Carousel */}
+                        <ProductImageCarousel
+                            images={images}
+                            productName={product.item_name}
                         />
+
+                        {/* Product Info */}
+                        <ProductInfoSection
+                            product={product}
+                            user={user}
+                            isAvail={product.is_avail}
+                            isOfferModalOpen={isOfferModalOpen}
+                            onOfferClick={() => setIsOfferModalOpen(true)}
+                            onDeleteClick={() => setShowDeleteModal(true)}
+                            offerStatus="idle"
+                            contactNo={sellerContact?.contact_no || null}
+                            fbLink={sellerContact?.fb_link || null}
+                        />
+                    </div>
+
+                    {/* Seller Info */}
+                    {seller && product && (
+                        <div className="mb-8">
+                            <SellerInfoSection
+                                sellerName={product.full_name}
+                                sellerProfilePic={product.profile_pic_url || undefined}
+                                sellerUsername={product.username}
+                                sellerLocation={product.item_location}
+                                avgRating={seller.avg_rating}
+                                reviewCount={seller.review_count}
+                                productCount={seller.product_count}
+                            />
+                        </div>
+                    )}
+
+                    {/* Seller Offers Section - Only visible to the seller */}
+                    {user && product && user.user_id === product.seller_id && (
+                        <div className="mb-8">
+                            <SellerOffers
+                                listingId={product.listing_id}
+                                productPrice={product.item_price}
+                            />
+                        </div>
+                    )}
+
+                    {/* Reviews */}
+                    <div className="mb-8">
+                        <ProductReviews
+                            listingId={String(product.listing_id)}
+                            reviews={reviews}
+                            canReview={canReview}
+                            user={user}
+                            onReviewSubmitted={handleReviewSubmitted}
+                        />
+                    </div>
+
+                    {/* Recommendations */}
+                    {recommendations.length > 0 && (
+                        <div className="mb-8">
+                            <h3 className="mb-6 text-xl font-semibold text-gray-900 dark:text-white">
+                                You might also like
+                            </h3>
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                                {recommendations.map((r) => (
+                                    <Products
+                                        key={r.listing_id}
+                                        product={r}
+                                        showUser
+                                        showStatus={false}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Offer Modal */}
+                {isOfferModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                        <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-gray-100 dark:bg-gray-900 dark:ring-gray-700">
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => {
+                                        setIsOfferModalOpen(false);
+                                        setOfferSuccess(false);
+                                    }}
+                                    className="rounded-full border border-gray-200 p-2 hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-500"
+                                >
+                                    <ArrowLeft className="h-4 w-4" />
+                                </button>
+                                <div>
+                                    <p className="text-xs font-semibold tracking-wide text-blue-600 uppercase dark:text-blue-200">
+                                        Make an offer
+                                    </p>
+                                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                        {product?.item_name}
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div className="mt-4 space-y-4">
+                                {offerSuccess && (
+                                    <div className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800 ring-1 ring-green-200 dark:bg-green-900/20 dark:text-green-200 dark:ring-green-800/40">
+                                        <div className="flex items-center gap-2">
+                                            <svg
+                                                className="h-5 w-5 shrink-0"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                            <div>
+                                                <p className="font-semibold">
+                                                    Offer sent successfully!
+                                                </p>
+                                                <p className="text-xs opacity-90">
+                                                    The seller will review your offer soon.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                {offerError && (
+                                    <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800 ring-1 ring-red-200 dark:bg-red-900/20 dark:text-red-200 dark:ring-red-800/40">
+                                        <div className="flex items-center gap-2">
+                                            <svg
+                                                className="h-5 w-5 shrink-0"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                            <div>
+                                                <p className="font-semibold">
+                                                    Failed to send offer
+                                                </p>
+                                                <p className="text-xs opacity-90">{offerError}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                {!offerSuccess && (
+                                    <>
+                                        <div>
+                                            <label className="mb-1 block text-sm font-medium text-gray-900 dark:text-white">
+                                                Your offer (₱)
+                                            </label>
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                value={offerPrice}
+                                                onChange={(e) => setOfferPrice(e.target.value)}
+                                                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                                                placeholder="e.g., 1000"
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="rounded-full bg-gray-100 px-2.5 py-1 dark:bg-gray-800">
+                                                Meet in a safe place
+                                            </span>
+                                            <span className="rounded-full bg-gray-100 px-2.5 py-1 dark:bg-gray-800">
+                                                Respect seller response time
+                                            </span>
+                                        </div>
+
+                                        <div className="flex gap-3">
+                                            <button
+                                                onClick={handleOfferSubmitClick}
+                                                className="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:cursor-pointer hover:bg-blue-700"
+                                            >
+                                                Send Offer
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setIsOfferModalOpen(false);
+                                                    setOfferError('');
+                                                }}
+                                                className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:cursor-pointer hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 )}
 
-                {/* Seller Offers Section - Only visible to the seller */}
-                {user && product && user.user_id === product.seller_id && (
-                    <div className="mb-8">
-                        <SellerOffers
-                            listingId={product.listing_id}
-                            productPrice={product.item_price}
-                        />
-                    </div>
-                )}
-
-                {/* Reviews */}
-                <div className="mb-8">
-                    <ProductReviews
-                        listingId={String(product.listing_id)}
-                        reviews={reviews}
-                        canReview={canReview}
-                        user={user}
-                        onReviewSubmitted={handleReviewSubmitted}
-                    />
-                </div>
-
-                {/* Recommendations */}
-                {recommendations.length > 0 && (
-                    <div className="mb-8">
-                        <h3 className="mb-6 text-xl font-semibold text-gray-900 dark:text-white">
-                            You might also like
-                        </h3>
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                            {recommendations.map((r) => (
-                                <Products
-                                    key={r.listing_id}
-                                    product={r}
-                                    showUser
-                                    showStatus={false}
-                                />
-                            ))}
+                {/* Delete Confirmation Modal */}
+                {showDeleteModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                        <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
+                            <div className="mb-4 flex items-center gap-3">
+                                <div className="rounded-full bg-red-100 p-3 dark:bg-red-900/20">
+                                    <ArrowLeft className="h-6 w-6 text-red-600 dark:text-red-400" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                    Delete Product
+                                </h3>
+                            </div>
+                            <p className="mb-6 text-gray-600 dark:text-gray-400">
+                                Are you sure you want to delete &quot;{product?.item_name}&quot;?
+                                This action cannot be undone and will permanently remove the listing
+                                and all its images.
+                            </p>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowDeleteModal(false)}
+                                    className="flex-1 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleDelete}
+                                    className="flex-1 rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
             </div>
-
-            {/* Offer Modal */}
-            {isOfferModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-gray-100 dark:bg-gray-900 dark:ring-gray-700">
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => {
-                                    setIsOfferModalOpen(false);
-                                    setOfferSuccess(false);
-                                }}
-                                className="rounded-full border border-gray-200 p-2 hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-500"
-                            >
-                                <ArrowLeft className="h-4 w-4" />
-                            </button>
-                            <div>
-                                <p className="text-xs font-semibold tracking-wide text-blue-600 uppercase dark:text-blue-200">
-                                    Make an offer
-                                </p>
-                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                                    {product?.item_name}
-                                </h3>
-                            </div>
-                        </div>
-
-                        <div className="mt-4 space-y-4">
-                            {offerSuccess && (
-                                <div className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-800 ring-1 ring-green-200 dark:bg-green-900/20 dark:text-green-200 dark:ring-green-800/40">
-                                    <div className="flex items-center gap-2">
-                                        <svg
-                                            className="h-5 w-5 shrink-0"
-                                            fill="currentColor"
-                                            viewBox="0 0 20 20"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-                                        <div>
-                                            <p className="font-semibold">
-                                                Offer sent successfully!
-                                            </p>
-                                            <p className="text-xs opacity-90">
-                                                The seller will review your offer soon.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                            {offerError && (
-                                <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800 ring-1 ring-red-200 dark:bg-red-900/20 dark:text-red-200 dark:ring-red-800/40">
-                                    <div className="flex items-center gap-2">
-                                        <svg
-                                            className="h-5 w-5 shrink-0"
-                                            fill="currentColor"
-                                            viewBox="0 0 20 20"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-                                        <div>
-                                            <p className="font-semibold">Failed to send offer</p>
-                                            <p className="text-xs opacity-90">{offerError}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                            {!offerSuccess && (
-                                <>
-                                    <div>
-                                        <label className="mb-1 block text-sm font-medium text-gray-900 dark:text-white">
-                                            Your offer (₱)
-                                        </label>
-                                        <input
-                                            type="number"
-                                            min="0"
-                                            value={offerPrice}
-                                            onChange={(e) => setOfferPrice(e.target.value)}
-                                            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                                            placeholder="e.g., 1000"
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                                        <span className="rounded-full bg-gray-100 px-2.5 py-1 dark:bg-gray-800">
-                                            Meet in a safe place
-                                        </span>
-                                        <span className="rounded-full bg-gray-100 px-2.5 py-1 dark:bg-gray-800">
-                                            Respect seller response time
-                                        </span>
-                                    </div>
-
-                                    <div className="flex gap-3">
-                                        <button
-                                            onClick={handleOfferSubmitClick}
-                                            className="flex-1 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:cursor-pointer hover:bg-blue-700"
-                                        >
-                                            Send Offer
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                setIsOfferModalOpen(false);
-                                                setOfferError('');
-                                            }}
-                                            className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:cursor-pointer hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Delete Confirmation Modal */}
-            {showDeleteModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
-                        <div className="mb-4 flex items-center gap-3">
-                            <div className="rounded-full bg-red-100 p-3 dark:bg-red-900/20">
-                                <ArrowLeft className="h-6 w-6 text-red-600 dark:text-red-400" />
-                            </div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                                Delete Product
-                            </h3>
-                        </div>
-                        <p className="mb-6 text-gray-600 dark:text-gray-400">
-                            Are you sure you want to delete &quot;{product?.item_name}&quot;? This
-                            action cannot be undone and will permanently remove the listing and all
-                            its images.
-                        </p>
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setShowDeleteModal(false)}
-                                className="flex-1 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="flex-1 rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             <Footer />
         </div>

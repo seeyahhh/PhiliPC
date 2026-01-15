@@ -127,10 +127,10 @@ const EditListingPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
             <Navigation />
 
-            <div className="mx-auto mt-4 flex max-w-7xl gap-2 p-4">
+            <div className="mx-auto mt-4 flex w-full max-w-7xl gap-2 p-4">
                 <button
                     onClick={() => router.back()}
                     className="hover:cursor-pointer"
@@ -140,7 +140,7 @@ const EditListingPage: React.FC = () => {
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">Edit Listing</h1>
             </div>
 
-            <div className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-7xl flex-1 px-4 pb-6 sm:px-6 lg:px-8">
                 <form
                     action={(formData) => {
                         formData.append('listing_id', id as string);
@@ -166,7 +166,7 @@ const EditListingPage: React.FC = () => {
                             {/* Item Name */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    Item Name *
+                                    Item Name <span className="text-red-600">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -187,7 +187,7 @@ const EditListingPage: React.FC = () => {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <Dropdown
-                                        label="Category *"
+                                        label="Category"
                                         options={categoryOptions}
                                         selected={category}
                                         onChange={setCategory}
@@ -229,7 +229,7 @@ const EditListingPage: React.FC = () => {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                        Price (₱) *
+                                        Price (₱) <span className="text-red-600">*</span>
                                     </label>
                                     <input
                                         type="number"
@@ -249,7 +249,7 @@ const EditListingPage: React.FC = () => {
                                 </div>
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                        Location *
+                                        Location <span className="text-red-600">*</span>
                                     </label>
                                     <input
                                         type="text"
@@ -270,7 +270,7 @@ const EditListingPage: React.FC = () => {
                             {/* Description */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                                    Description *
+                                    Description <span className="text-red-600">*</span>
                                 </label>
                                 <textarea
                                     name="item_description"
