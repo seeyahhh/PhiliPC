@@ -20,7 +20,7 @@ const TransactionTabs: React.FC = () => {
                 <Link
                     key={tab.href}
                     href={tab.href}
-                    className={`text-md px-4 py-2 font-semibold hover:cursor-pointer md:text-[16px] ${
+                    className={`flex items-end px-4 py-2 text-sm font-semibold hover:cursor-pointer md:text-[16px] ${
                         pathname === tab.href
                             ? 'border-b-2 border-blue-600 text-blue-600'
                             : 'text-gray-700 dark:text-gray-400'
